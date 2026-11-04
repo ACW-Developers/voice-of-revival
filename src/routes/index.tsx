@@ -115,7 +115,7 @@ function About() {
       <div className="mx-auto grid max-w-7xl items-center gap-14 px-5 lg:grid-cols-2">
         <div className="relative">
           <img src={groupA.url} alt="The founding ministers of Voice of Revival" loading="lazy" className="w-full rounded-lg object-cover" />
-          <div className="absolute -bottom-6 -right-6 -z-10 hidden h-full w-full rounded-lg border-2 border-primary md:block" />
+          <div className="absolute -bottom-6 -right-6 -z-10 hidden h-full w-full rounded-lg border-2 border-primary lg:block" />
         </div>
         <div>
           <p className="eyebrow">Our Introduction</p>
