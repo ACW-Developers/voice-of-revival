@@ -1,4 +1,5 @@
 # Website visual upgrades
+
 - [x] Add two concert images and an accessible cinematic carousel.
 - [x] Apply coordinated light/dark themes and refined corners.
 - [x] Expand footer with navigation, contact, social status and core values.
