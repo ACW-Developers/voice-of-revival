@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Pause, Play } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import worship from "@/assets/worship_cross.jpg.asset.json";
+import worship from "@/assets/worship_cross.jpg";
 import concert from "@/assets/worship-concert.jpg";
 import live from "@/assets/worship-live.jpg";
 import { HERO_EFFECTS, HERO_HOLD_MS, HERO_TRANSITION_MS, nextHeroSlide } from "@/lib/carousel";

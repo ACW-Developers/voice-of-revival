@@ -7,11 +7,11 @@ import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { HeroCarousel } from "@/components/hero-carousel";
 import { supabase } from "@/integrations/supabase/client";
-import logo from "@/assets/vor_logo.png.asset.json";
-import worship from "@/assets/worship_cross.jpg.asset.json";
-import groupA from "@/assets/ministers_jj.jpg.asset.json";
-import groupB from "@/assets/ministers_DSC04498.jpg.asset.json";
-import groupC from "@/assets/ministers_DSC04460.jpg.asset.json";
+import logo from "@/assets/vor_logo.png";
+import worship from "@/assets/worship_cross.jpg";
+import groupA from "@/assets/ministers_jj.jpg";
+import groupB from "@/assets/ministers_DSC04498.jpg";
+import groupC from "@/assets/ministers_DSC04460.jpg";
 
 export const Route = createFileRoute("/")({
   head: () => ({
