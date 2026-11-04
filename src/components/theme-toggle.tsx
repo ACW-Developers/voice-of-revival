@@ -8,12 +8,12 @@ export function ThemeToggle() {
     let selected = "dark";
     try { selected = localStorage.getItem("vor-theme") ?? "dark"; } catch { /* Storage may be unavailable. */ }
     setLight(selected === "light");
-    document.documentElement.dataset.theme = selected === "light" ? "light" : "dark";
+    document.documentElement.dataset['theme'] = selected === "light" ? "light" : "dark";
   }, []);
   function toggle() {
     const theme = light ? "dark" : "light";
     setLight(!light);
-    document.documentElement.dataset.theme = theme;
+    document.documentElement.dataset['theme'] = theme;
     try { localStorage.setItem("vor-theme", theme); } catch { /* Theme still works without persistence. */ }
   }
   return (
