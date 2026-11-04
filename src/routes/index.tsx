@@ -290,7 +290,7 @@ function Contact() {
     setSending(true);
     const { error } = await supabase.from("contact_messages").insert(parsed.data);
     setSending(false);
-    if (error) return toast.error("Sorry, your message couldn't be sent. Please try again.");
+    if (error) { toast.error("Sorry, your message couldn't be sent. Please try again."); return; }
     form.reset();
     toast.success("Thank you! Your message has been received.");
   }
@@ -314,8 +314,8 @@ function Contact() {
           ))}
           <div>
             <label htmlFor="message" className="mb-1.5 block text-xs font-bold uppercase tracking-widest">Message</label>
-            <textarea id="message" name="message" rows={5} className={field} aria-invalid={!!errors.message} />
-            {errors.message && <p className="mt-1 text-sm text-destructive">{errors.message}</p>}
+            <textarea id="message" name="message" rows={5} className={field} aria-invalid={!!errors["message"]} />
+            {errors["message"] && <p className="mt-1 text-sm text-destructive">{errors["message"]}</p>}
           </div>
           <button type="submit" disabled={sending} className={`${btnPrimary} w-full disabled:opacity-60`}>{sending ? "Sending…" : "Send Message"}</button>
         </form>
