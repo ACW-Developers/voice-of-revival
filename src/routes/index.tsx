@@ -69,7 +69,7 @@ function Nav() {
         </ul>
         <div className="flex items-center gap-3">
           <ThemeToggle />
-          <a href="#support" className={`${btnPrimary} hidden px-5 py-2.5 sm:inline-flex`}>Support Us</a>
+          <div className="hidden sm:block"><Button asChild className={`${btnPrimary} px-5 py-2.5`}><a href="#support">Support Us</a></Button></div>
           <Button variant="ghost" size="icon" className="lg:hidden" aria-label={open ? "Close menu" : "Open menu"} aria-expanded={open} onClick={() => setOpen(!open)}>
             {open ? <X /> : <Menu />}
           </Button>
