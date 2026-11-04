@@ -66,7 +66,7 @@ export function DonationModal({ logo }: { logo: string }) {
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogContent className="max-h-[92vh] w-[calc(100%-1.5rem)] max-w-lg overflow-y-auto rounded-2xl border-border/60 bg-card/95 p-6 backdrop-blur-xl sm:p-8 [&~*]:backdrop-blur-sm">
+      <DialogContent className="max-h-[92vh] w-[calc(100%-1.5rem)] max-w-lg overflow-y-auto rounded-2xl border-border/60 bg-card/95 p-6 backdrop-blur-xl sm:p-8">
         <div className="flex flex-col items-center text-center">
           <img src={logo} alt="Voice of Revival" className="h-14 w-auto" />
           <DialogTitle className="mt-4 font-display text-2xl">Support the Movement</DialogTitle>
