@@ -2,7 +2,10 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { z } from "zod";
 import { toast } from "sonner";
-import { Menu, X, Music2, Users, Heart, Sparkles, Mic2, HandHeart, Calendar, Mail } from "lucide-react";
+import { Menu, X, Music2, Users, Heart, Sparkles, Mic2, HandHeart, Calendar, Mail, Facebook, Instagram, Youtube, ArrowUpRight } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { ThemeToggle } from "@/components/theme-toggle";
+import { HeroCarousel } from "@/components/hero-carousel";
 import { supabase } from "@/integrations/supabase/client";
 import logo from "@/assets/vor_logo.png.asset.json";
 import worship from "@/assets/worship_cross.jpg.asset.json";
@@ -35,7 +38,7 @@ const NAV = [
 
 const MINISTERS = ["Jacques & Kamariza", "Aime Frank", "Bonke", "Kadogo"];
 
-const btn = "inline-flex items-center justify-center gap-2 px-7 py-3.5 text-sm font-bold uppercase tracking-widest transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background active:scale-[0.98]";
+const btn = "inline-flex h-auto min-h-12 items-center justify-center gap-2 whitespace-normal rounded-lg px-7 py-3.5 text-center text-sm font-bold uppercase tracking-widest transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background active:scale-[0.98]";
 const btnPrimary = `${btn} bg-red-gradient text-primary-foreground shadow-glow hover:brightness-110`;
 const btnGhost = `${btn} border border-foreground/40 text-foreground hover:bg-foreground hover:text-background`;
 
@@ -53,11 +56,11 @@ function Nav() {
   const [open, setOpen] = useState(false);
   return (
     <header className="fixed inset-x-0 top-0 z-50 border-b border-border bg-background/80 backdrop-blur-md">
-      <nav className="mx-auto flex h-18 max-w-7xl items-center justify-between px-5 py-3">
+      <nav className="mx-auto grid h-18 max-w-7xl grid-cols-[minmax(0,1fr)_auto] items-center gap-3 px-5 py-3 lg:flex lg:justify-between">
         <a href="#home" aria-label="Voice of Revival home" className="shrink-0">
-          <img src={logo.url} alt="Voice of Revival" className="h-10 w-auto" />
+          <img src={logo.url} alt="Voice of Revival" className="h-10 max-w-full w-auto" />
         </a>
-        <ul className="hidden items-center gap-7 lg:flex">
+        <ul className="hidden min-w-0 items-center gap-5 lg:flex">
           {NAV.map(([id, label]) => (
             <li key={id}>
               <a href={`#${id}`} className="text-sm font-semibold uppercase tracking-wider text-muted-foreground transition-colors hover:text-foreground">{label}</a>
@@ -65,10 +68,11 @@ function Nav() {
           ))}
         </ul>
         <div className="flex items-center gap-3">
+          <ThemeToggle />
           <a href="#support" className={`${btnPrimary} hidden px-5 py-2.5 sm:inline-flex`}>Support Us</a>
-          <button className="p-2 lg:hidden" aria-label={open ? "Close menu" : "Open menu"} aria-expanded={open} onClick={() => setOpen(!open)}>
+          <Button variant="ghost" size="icon" className="lg:hidden" aria-label={open ? "Close menu" : "Open menu"} aria-expanded={open} onClick={() => setOpen(!open)}>
             {open ? <X /> : <Menu />}
-          </button>
+          </Button>
         </div>
       </nav>
       <div className={`grid overflow-hidden transition-all duration-300 lg:hidden ${open ? "grid-rows-[1fr]" : "grid-rows-[0fr]"}`}>
@@ -85,20 +89,20 @@ function Nav() {
 
 function Hero() {
   return (
-    <section id="home" className="relative flex min-h-screen items-center overflow-hidden">
-      <img src={worship.url} alt="Worshippers raising hands before a stage with a glowing cross" className="absolute inset-0 h-full w-full object-cover" fetchPriority="high" />
-      <div className="absolute inset-0 bg-hero-overlay" />
-      <div className="relative mx-auto max-w-5xl px-5 pt-24 text-center">
-        <p className="eyebrow animate-rise">A Christ-centred worship movement</p>
+    <section id="home" className="relative flex min-h-[min(850px,92svh)] items-center overflow-hidden bg-photo-background text-photo-foreground">
+      <HeroCarousel />
+      <div className="pointer-events-none absolute inset-0 z-10 bg-hero-overlay" />
+      <div className="relative z-10 mx-auto max-w-5xl px-5 pb-24 pt-32 text-center">
+        <p className="eyebrow animate-rise text-photo-accent">A Christ-centred worship movement</p>
         <h1 className="animate-rise mt-6 font-display text-5xl uppercase leading-[1] md:text-8xl" style={{ animationDelay: "0.1s" }}>
-          Different Voices. One Purpose.<br /><span className="text-primary">One Sound</span> for His Glory.
+          Different Voices. One Purpose.<br /><span className="text-photo-accent">One Sound</span> for His Glory.
         </h1>
-        <p className="animate-rise mx-auto mt-8 max-w-2xl text-lg text-foreground/85" style={{ animationDelay: "0.25s" }}>
+        <p className="animate-rise mx-auto mt-8 max-w-2xl text-lg text-photo-foreground/85" style={{ animationDelay: "0.25s" }}>
           A Christ-centred worship movement bringing people together through authentic worship, nurturing Christian talent, and spreading the hope of the Gospel through music, fellowship, and meaningful service.
         </p>
         <div className="animate-rise mt-10 flex flex-col justify-center gap-4 sm:flex-row" style={{ animationDelay: "0.4s" }}>
           <a href="#about" className={btnPrimary}>Discover Our Movement</a>
-          <a href="#events" className={btnGhost}>Join Us in Worship</a>
+          <a href="#events" className={`${btn} border border-photo-foreground/40 text-photo-foreground hover:bg-photo-foreground hover:text-photo-background`}>Join Us in Worship</a>
         </div>
       </div>
     </section>
@@ -110,8 +114,8 @@ function About() {
     <section id="about" className="py-24 md:py-32">
       <div className="mx-auto grid max-w-7xl items-center gap-14 px-5 lg:grid-cols-2">
         <div className="relative">
-          <img src={groupA.url} alt="The founding ministers of Voice of Revival" loading="lazy" className="w-full object-cover" />
-          <div className="absolute -bottom-6 -right-6 -z-10 hidden h-full w-full border-2 border-primary md:block" />
+          <img src={groupA.url} alt="The founding ministers of Voice of Revival" loading="lazy" className="w-full rounded-lg object-cover" />
+          <div className="absolute -bottom-6 -right-6 -z-10 hidden h-full w-full rounded-lg border-2 border-primary md:block" />
         </div>
         <div>
           <p className="eyebrow">Our Introduction</p>
@@ -144,9 +148,9 @@ const MISSION = [
 
 function Pillars({ items, solid }: { items: typeof VISION; solid?: boolean }) {
   return (
-    <div className="mt-12 grid gap-px bg-border md:grid-cols-3">
+    <div className="mt-12 grid gap-4 md:grid-cols-3">
       {items.map(({ icon: Icon, t, d }, i) => (
-        <div key={t} className={`group p-8 transition-colors md:p-10 ${solid ? "bg-card hover:bg-muted" : "bg-background hover:bg-card"}`}>
+        <div key={t} className={`group rounded-lg border border-border p-8 transition-all duration-300 hover:-translate-y-1 md:p-10 ${solid ? "bg-background hover:bg-muted" : "bg-background hover:bg-muted"}`}>
           <div className="flex items-center justify-between">
             <Icon className="h-8 w-8 text-primary" />
             <span className="font-display text-5xl text-foreground/10 transition-colors group-hover:text-primary/40">0{i + 1}</span>
@@ -190,14 +194,14 @@ function Artists() {
         </Heading>
         <div className="mt-14 grid gap-4 md:grid-cols-2">
           {[groupB, groupC].map((g, i) => (
-            <div key={i} className="group overflow-hidden">
+            <div key={i} className="group overflow-hidden rounded-lg">
               <img src={g.url} alt="Voice of Revival ministers" loading="lazy" className="aspect-[3/2] w-full object-cover transition-transform duration-700 group-hover:scale-105" />
             </div>
           ))}
         </div>
-        <ul className="mt-10 grid gap-px bg-border sm:grid-cols-2 lg:grid-cols-4">
+        <ul className="mt-10 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
           {MINISTERS.map((m) => (
-            <li key={m} className="bg-background p-6 text-center transition-colors hover:bg-card">
+            <li key={m} className="rounded-lg border border-border bg-background p-6 text-center transition-colors hover:bg-card">
               <p className="font-display text-2xl uppercase">{m}</p>
               <p className="mt-1 text-xs uppercase tracking-[0.25em] text-primary">Founding Minister</p>
             </li>
@@ -215,7 +219,7 @@ function Events() {
         <Heading eyebrow="Gather With Us" title="Come Worship, Connect & Experience the Revival.">
           Worship gatherings, gospel concerts, fellowship events, and community activities — moments to encounter Christ together.
         </Heading>
-        <div className="mx-auto mt-14 max-w-2xl border border-dashed border-primary/50 p-10 text-center">
+        <div className="mx-auto mt-14 max-w-2xl rounded-lg border border-dashed border-primary/50 p-6 text-center sm:p-10">
           <Calendar className="mx-auto h-10 w-10 text-primary" />
           <h3 className="mt-5 font-display text-3xl uppercase">New Gatherings Coming Soon</h3>
           <p className="mt-3 text-muted-foreground">Our next worship experiences are being prepared. Stay connected and be the first to hear when dates are announced.</p>
@@ -240,9 +244,9 @@ function MusicSection() {
         </div>
         <div className="grid grid-cols-2 gap-4">
           {["Releases", "Worship Videos", "Live Performances", "Coming Soon"].map((t, i) => (
-            <div key={t} className={`flex aspect-square flex-col justify-end border border-border p-5 ${i === 0 ? "bg-red-gradient" : "bg-card"}`}>
+            <div key={t} className={`flex aspect-square min-w-0 flex-col justify-end rounded-lg border border-border p-4 transition-transform duration-300 hover:-translate-y-1 sm:p-5 ${i === 0 ? "bg-red-gradient text-primary-foreground" : "bg-card"}`}>
               <Music2 className="mb-auto h-6 w-6" />
-              <p className="font-display text-xl uppercase">{t}</p>
+              <p className="break-words font-display text-lg uppercase sm:text-xl">{t}</p>
             </div>
           ))}
         </div>
@@ -253,13 +257,13 @@ function MusicSection() {
 
 function Support() {
   return (
-    <section id="support" className="relative overflow-hidden py-28 md:py-40">
+    <section id="support" className="relative overflow-hidden bg-photo-background py-28 text-photo-foreground md:py-40">
       <img src={worship.url} alt="" aria-hidden className="absolute inset-0 h-full w-full object-cover" loading="lazy" />
-      <div className="absolute inset-0 bg-background/85" />
+      <div className="absolute inset-0 bg-photo-background/85" />
       <div className="relative mx-auto max-w-3xl px-5 text-center">
-        <p className="eyebrow">Support the Movement</p>
+        <p className="eyebrow text-photo-accent">Support the Movement</p>
         <h2 className="mt-4 font-display text-5xl uppercase md:text-7xl">Be Part of the Movement.</h2>
-        <p className="mt-6 text-lg text-foreground/85">
+        <p className="mt-6 text-lg text-photo-foreground/85">
           Every great movement grows through people who believe in its purpose. Join us in spreading the message of Christ through worship, empowering Christian creatives, and extending hope to communities in need. Your support, partnership, and prayers help us take this vision beyond the stage and make a meaningful Kingdom impact.
         </p>
         <a href="#contact" onClick={() => setTimeout(() => { const s = document.getElementById("subject") as HTMLInputElement | null; if (s) s.value = "Partnership / Donation"; }, 50)} className={`${btnPrimary} mt-10`}>Donate Now</a>
@@ -294,7 +298,7 @@ function Contact() {
     form.reset();
     toast.success("Thank you! Your message has been received.");
   }
-  const field = "w-full border border-input bg-background px-4 py-3 text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none";
+  const field = "w-full rounded-lg border border-input bg-background px-4 py-3 text-foreground transition-colors placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/15";
   return (
     <section id="contact" className="py-24 md:py-32">
       <div className="mx-auto grid max-w-7xl gap-14 px-5 lg:grid-cols-2">
@@ -317,7 +321,7 @@ function Contact() {
             <textarea id="message" name="message" rows={5} className={field} aria-invalid={!!errors["message"]} />
             {errors["message"] && <p className="mt-1 text-sm text-destructive">{errors["message"]}</p>}
           </div>
-          <button type="submit" disabled={sending} className={`${btnPrimary} w-full disabled:opacity-60`}>{sending ? "Sending…" : "Send Message"}</button>
+          <Button type="submit" disabled={sending} className={`${btnPrimary} w-full disabled:opacity-60`}>{sending ? "Sending…" : "Send Message"}</Button>
         </form>
       </div>
     </section>
@@ -327,18 +331,32 @@ function Contact() {
 function Footer() {
   return (
     <footer className="border-t border-border bg-card">
-      <div className="mx-auto grid max-w-7xl gap-10 px-5 py-16 md:grid-cols-3">
-        <div>
+      <div className="mx-auto grid max-w-7xl gap-x-10 gap-y-12 px-5 py-16 sm:grid-cols-2 lg:grid-cols-[1.4fr_0.8fr_1fr_1fr]">
+        <div className="min-w-0">
           <img src={logo.url} alt="Voice of Revival" className="h-14 w-auto" loading="lazy" />
           <p className="mt-4 text-sm text-muted-foreground">A Christ-centred worship movement — different voices, one purpose, one sound for His glory.</p>
+          <a href="#support" className={`${btnPrimary} mt-6 px-5`}>Donate Now <ArrowUpRight className="h-4 w-4" /></a>
         </div>
-        <ul className="grid grid-cols-2 gap-3 text-sm">
-          {NAV.slice(1).map(([id, label]) => (
-            <li key={id}><a href={`#${id}`} className="text-muted-foreground hover:text-foreground">{label}</a></li>
-          ))}
-        </ul>
-        <div className="md:text-right">
-          <a href="#support" className={btnPrimary}>Donate Now</a>
+        <div className="min-w-0">
+          <h3 className="text-xs font-bold uppercase tracking-widest">Quick Navigation</h3>
+          <ul className="mt-6 space-y-3 text-sm">
+            {NAV.map(([id, label]) => <li key={id}><a href={`#${id}`} className="text-muted-foreground transition-colors hover:text-primary">{label}</a></li>)}
+            <li><a href="#music" className="text-muted-foreground transition-colors hover:text-primary">Music & Worship</a></li>
+          </ul>
+        </div>
+        <div className="min-w-0">
+          <h3 className="text-xs font-bold uppercase tracking-widest">Contact & Connect</h3>
+          <a href="#contact" className="mt-6 flex items-center gap-2 text-sm text-muted-foreground transition-colors hover:text-primary"><Mail className="h-4 w-4 shrink-0 text-primary" /> Send us a message</a>
+          <p className="mt-6 text-sm text-muted-foreground">Social channels coming soon.</p>
+          <div className="mt-3 flex gap-2">
+            {[{ icon: Facebook, name: "Facebook" }, { icon: Instagram, name: "Instagram" }, { icon: Youtube, name: "YouTube" }].map(({ icon: Icon, name }) => <span key={name} title={`${name} — link not yet available`} aria-label={`${name} — link not yet available`} className="grid h-10 w-10 place-items-center rounded-lg border border-border text-muted-foreground"><Icon className="h-4 w-4" /></span>)}
+          </div>
+        </div>
+        <div className="min-w-0">
+          <h3 className="text-xs font-bold uppercase tracking-widest">Core Values</h3>
+          <ul className="mt-6 space-y-3 text-sm text-muted-foreground">
+            {["Christ-Centred Worship", "Unity", "Excellence", "Fellowship", "Compassion"].map(value => <li key={value} className="flex items-start gap-2"><span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-sm bg-primary" />{value}</li>)}
+          </ul>
         </div>
       </div>
       <p className="border-t border-border py-6 text-center text-xs text-muted-foreground">© {new Date().getFullYear()} Voice of Revival. All rights reserved.</p>
