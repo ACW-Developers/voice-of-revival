@@ -1,13 +1,13 @@
 import { useEffect, useState } from "react";
 import { Pause, Play } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import worship from "@/assets/worship_cross.jpg.asset.json";
+import worship from "@/assets/worship_cross.jpg";
 import concert from "@/assets/worship-concert.jpg";
 import live from "@/assets/worship-live.jpg";
 import { HERO_EFFECTS, HERO_HOLD_MS, HERO_TRANSITION_MS, nextHeroSlide } from "@/lib/carousel";
 
 const slides = [
-  { src: worship.url, alt: "Worshippers raising hands before a stage with a glowing cross" },
+  { src: worship, alt: "Worshippers raising hands before a stage with a glowing cross" },
   { src: concert, alt: "African gospel singers and musicians leading a congregation in worship" },
   { src: live, alt: "African gospel concert with live musicians and an outdoor worship crowd" },
 ];

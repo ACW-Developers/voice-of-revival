@@ -5,13 +5,14 @@ import { toast } from "sonner";
 import { Menu, X, Music2, Users, Heart, Sparkles, Mic2, HandHeart, Calendar, Mail, Facebook, Instagram, Youtube, ArrowUpRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/theme-toggle";
+import { DonationModal, openDonation } from "@/components/donation-modal";
 import { HeroCarousel } from "@/components/hero-carousel";
 import { supabase } from "@/integrations/supabase/client";
-import logo from "@/assets/vor_logo.png.asset.json";
-import worship from "@/assets/worship_cross.jpg.asset.json";
-import groupA from "@/assets/ministers_jj.jpg.asset.json";
-import groupB from "@/assets/ministers_DSC04498.jpg.asset.json";
-import groupC from "@/assets/ministers_DSC04460.jpg.asset.json";
+import logo from "@/assets/vor_logo.png";
+import worship from "@/assets/worship_cross.jpg";
+import groupA from "@/assets/ministers_jj.jpg";
+import groupB from "@/assets/ministers_DSC04498.jpg";
+import groupC from "@/assets/ministers_DSC04460.jpg";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -58,7 +59,7 @@ function Nav() {
     <header className="fixed inset-x-0 top-0 z-50 border-b border-border bg-background/80 backdrop-blur-md">
       <nav className="mx-auto grid h-18 max-w-7xl grid-cols-[minmax(0,1fr)_auto] items-center gap-3 px-5 py-3 lg:flex lg:justify-between">
         <a href="#home" aria-label="Voice of Revival home" className="shrink-0">
-          <img src={logo.url} alt="Voice of Revival" className="h-10 max-w-full w-auto" />
+          <img src={logo} alt="Voice of Revival" className="h-10 max-w-full w-auto" />
         </a>
         <ul className="hidden min-w-0 items-center gap-5 lg:flex">
           {NAV.map(([id, label]) => (
@@ -69,7 +70,7 @@ function Nav() {
         </ul>
         <div className="flex items-center gap-3">
           <ThemeToggle />
-          <div className="hidden sm:block"><Button asChild className={`${btnPrimary} px-5 py-2.5`}><a href="#support">Support Us</a></Button></div>
+          <div className="hidden sm:block"><Button onClick={openDonation} className={`${btnPrimary} px-5 py-2.5`}>Support Us</Button></div>
           <Button variant="ghost" size="icon" className="lg:hidden" aria-label={open ? "Close menu" : "Open menu"} aria-expanded={open} onClick={() => setOpen(!open)}>
             {open ? <X /> : <Menu />}
           </Button>
@@ -80,7 +81,7 @@ function Nav() {
           {NAV.map(([id, label]) => (
             <li key={id}><a href={`#${id}`} onClick={() => setOpen(false)} className="block py-3 font-semibold uppercase tracking-wider">{label}</a></li>
           ))}
-          <li className="pb-5 pt-2"><a href="#support" onClick={() => setOpen(false)} className={`${btnPrimary} w-full`}>Support Us</a></li>
+          <li className="pb-5 pt-2"><button type="button" onClick={() => { setOpen(false); openDonation(); }} className={`${btnPrimary} w-full`}>Support Us</button></li>
         </ul>
       </div>
     </header>
@@ -114,7 +115,7 @@ function About() {
     <section id="about" className="py-24 md:py-32">
       <div className="mx-auto grid max-w-7xl items-center gap-14 px-5 lg:grid-cols-2">
         <div className="relative">
-          <img src={groupA.url} alt="The founding ministers of Voice of Revival" loading="lazy" className="w-full rounded-lg object-cover" />
+          <img src={groupA} alt="The founding ministers of Voice of Revival" loading="lazy" className="w-full rounded-lg object-cover" />
           <div className="absolute -bottom-6 -right-6 -z-10 hidden h-full w-full rounded-lg border-2 border-primary lg:block" />
         </div>
         <div>
@@ -195,7 +196,7 @@ function Artists() {
         <div className="mt-14 grid gap-4 md:grid-cols-2">
           {[groupB, groupC].map((g, i) => (
             <div key={i} className="group overflow-hidden rounded-lg">
-              <img src={g.url} alt="Voice of Revival ministers" loading="lazy" className="aspect-[3/2] w-full object-cover transition-transform duration-700 group-hover:scale-105" />
+              <img src={g} alt="Voice of Revival ministers" loading="lazy" className="aspect-[3/2] w-full object-cover transition-transform duration-700 group-hover:scale-105" />
             </div>
           ))}
         </div>
@@ -258,7 +259,7 @@ function MusicSection() {
 function Support() {
   return (
     <section id="support" className="relative overflow-hidden bg-photo-background py-28 text-photo-foreground md:py-40">
-      <img src={worship.url} alt="" aria-hidden className="absolute inset-0 h-full w-full object-cover" loading="lazy" />
+      <img src={worship} alt="" aria-hidden className="absolute inset-0 h-full w-full object-cover" loading="lazy" />
       <div className="absolute inset-0 bg-photo-background/85" />
       <div className="relative mx-auto max-w-3xl px-5 text-center">
         <p className="eyebrow text-photo-accent">Support the Movement</p>
@@ -266,7 +267,7 @@ function Support() {
         <p className="mt-6 text-lg text-photo-foreground/85">
           Every great movement grows through people who believe in its purpose. Join us in spreading the message of Christ through worship, empowering Christian creatives, and extending hope to communities in need. Your support, partnership, and prayers help us take this vision beyond the stage and make a meaningful Kingdom impact.
         </p>
-        <a href="#contact" onClick={() => setTimeout(() => { const s = document.getElementById("subject") as HTMLInputElement | null; if (s) s.value = "Partnership / Donation"; }, 50)} className={`${btnPrimary} mt-10`}>Donate Now</a>
+        <button type="button" onClick={openDonation} className={`${btnPrimary} mt-10`}>Donate Now</button>
       </div>
     </section>
   );
@@ -333,9 +334,9 @@ function Footer() {
     <footer className="border-t border-border bg-card">
       <div className="mx-auto grid max-w-7xl gap-x-10 gap-y-12 px-5 py-16 sm:grid-cols-2 lg:grid-cols-[1.4fr_0.8fr_1fr_1fr]">
         <div className="min-w-0">
-          <img src={logo.url} alt="Voice of Revival" className="h-14 w-auto" loading="lazy" />
+          <img src={logo} alt="Voice of Revival" className="h-14 w-auto" loading="lazy" />
           <p className="mt-4 text-sm text-muted-foreground">A Christ-centred worship movement — different voices, one purpose, one sound for His glory.</p>
-          <a href="#support" className={`${btnPrimary} mt-6 px-5`}>Donate Now <ArrowUpRight className="h-4 w-4" /></a>
+          <button type="button" onClick={openDonation} className={`${btnPrimary} mt-6 px-5`}>Donate Now <ArrowUpRight className="h-4 w-4" /></button>
         </div>
         <div className="min-w-0">
           <h3 className="text-xs font-bold uppercase tracking-widest">Quick Navigation</h3>
@@ -379,6 +380,7 @@ function Index() {
         <Contact />
       </main>
       <Footer />
+      <DonationModal logo={logo} />
     </>
   );
 }
