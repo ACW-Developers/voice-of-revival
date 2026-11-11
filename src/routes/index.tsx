@@ -11,7 +11,6 @@ import {
   Sparkles,
   Mic2,
   HandHeart,
-  Calendar,
   Mail,
   Facebook,
   Instagram,
