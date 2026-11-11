@@ -14,3 +14,4 @@
 - Keep cinematic background behavior in the focused hero-carousel component and timing rules in its shared module so motion can be tested independently of page content.
 - Apply persistent theme selection through root data-theme and semantic CSS tokens; photographic sections retain dedicated contrast tokens for readability in either theme.
 - Netlify deploys build with NITRO_PRESET=netlify (set in netlify.toml), publishing dist; Lovable builds ignore it and stay on Cloudflare. npm + package-lock.json is the package manager.
+- Ticket checkout calls Stripe's REST API with fetch from src/lib/events.functions.ts (no SDK); tickets are recorded idempotently on the success page by session id, so no webhook is required.
