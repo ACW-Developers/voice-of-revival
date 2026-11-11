@@ -22,6 +22,8 @@ import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { DonationModal, openDonation } from "@/components/donation-modal";
 import { HeroCarousel } from "@/components/hero-carousel";
+import { GospelMarquee } from "@/components/gospel-marquee";
+import { EventsSection } from "@/components/events-section";
 import { supabase } from "@/integrations/supabase/client";
 import logo from "@/assets/vor_logo.png";
 import worship from "@/assets/worship_cross.jpg";
@@ -363,25 +365,15 @@ function Artists() {
 
 function Events() {
   return (
-    <section id="events" className="border-y border-border bg-card py-24 md:py-32">
-      <div className="mx-auto max-w-7xl px-5">
-        <Heading eyebrow="Gather With Us" title="Come Worship, Connect & Experience the Revival.">
-          Worship gatherings, gospel concerts, fellowship events, and community activities — moments
-          to encounter Christ together.
+    <EventsSection
+      poster={worship}
+      heading={
+        <Heading eyebrow="Events & Tickets" title="Come Worship, Connect & Experience the Revival.">
+          Worship gatherings, gospel concerts and fellowship events — reserve your place and
+          encounter Christ together.
         </Heading>
-        <div className="mx-auto mt-14 max-w-2xl rounded-lg border border-dashed border-primary/50 p-6 text-center sm:p-10">
-          <Calendar className="mx-auto h-10 w-10 text-primary" />
-          <h3 className="mt-5 font-display text-3xl uppercase">New Gatherings Coming Soon</h3>
-          <p className="mt-3 text-muted-foreground">
-            Our next worship experiences are being prepared. Stay connected and be the first to hear
-            when dates are announced.
-          </p>
-          <a href="#contact" className={`${btnPrimary} mt-8`}>
-            Stay Connected
-          </a>
-        </div>
-      </div>
-    </section>
+      }
+    />
   );
 }
 
@@ -640,10 +632,11 @@ function Index() {
       <Nav />
       <main>
         <Hero />
+        <GospelMarquee />
+        <Events />
         <About />
         <Vision />
         <Artists />
-        <Events />
         <MusicSection />
         <Support />
         <Contact />
