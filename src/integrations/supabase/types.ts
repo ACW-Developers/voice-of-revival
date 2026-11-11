@@ -41,15 +41,134 @@ export type Database = {
         }
         Relationships: []
       }
+      events: {
+        Row: {
+          capacity: number
+          created_at: string
+          currency: string
+          description: string
+          id: string
+          poster_url: string | null
+          price_cents: number
+          published: boolean
+          starts_at: string
+          tickets_sold: number
+          title: string
+          updated_at: string
+          venue: string
+        }
+        Insert: {
+          capacity?: number
+          created_at?: string
+          currency?: string
+          description?: string
+          id?: string
+          poster_url?: string | null
+          price_cents?: number
+          published?: boolean
+          starts_at: string
+          tickets_sold?: number
+          title: string
+          updated_at?: string
+          venue?: string
+        }
+        Update: {
+          capacity?: number
+          created_at?: string
+          currency?: string
+          description?: string
+          id?: string
+          poster_url?: string | null
+          price_cents?: number
+          published?: boolean
+          starts_at?: string
+          tickets_sold?: number
+          title?: string
+          updated_at?: string
+          venue?: string
+        }
+        Relationships: []
+      }
+      tickets: {
+        Row: {
+          amount_cents: number
+          buyer_email: string | null
+          buyer_name: string | null
+          created_at: string
+          currency: string
+          event_id: string
+          id: string
+          quantity: number
+          stripe_session_id: string
+          ticket_code: string
+        }
+        Insert: {
+          amount_cents: number
+          buyer_email?: string | null
+          buyer_name?: string | null
+          created_at?: string
+          currency: string
+          event_id: string
+          id?: string
+          quantity: number
+          stripe_session_id: string
+          ticket_code?: string
+        }
+        Update: {
+          amount_cents?: number
+          buyer_email?: string | null
+          buyer_name?: string | null
+          created_at?: string
+          currency?: string
+          event_id?: string
+          id?: string
+          quantity?: number
+          stripe_session_id?: string
+          ticket_code?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "tickets_event_id_fkey"
+            columns: ["event_id"]
+            isOneToOne: false
+            referencedRelation: "events"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      user_roles: {
+        Row: {
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          id?: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "admin" | "user"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -176,6 +295,8 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["admin", "user"],
+    },
   },
 } as const
