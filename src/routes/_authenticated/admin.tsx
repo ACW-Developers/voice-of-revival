@@ -36,7 +36,7 @@ const schema = z.object({
   capacity: z.coerce.number().int().min(0).max(1000000),
   published: z.boolean(),
 });
-type Form = z.input<typeof schema>;
+type Form = Omit<z.input<typeof schema>, "price" | "capacity"> & { price: number | string; capacity: number | string };
 const empty: Form = { title: "", description: "", poster_url: "", starts_at: "", venue: "", price: 0, currency: "usd", capacity: 100, published: false };
 
 const toLocal = (iso: string) => {
@@ -87,6 +87,7 @@ function Admin() {
       : await supabase.from("events").insert(row);
     if (error) return toast.error(error.message);
     toast.success("Event saved"); setEditing(null); refresh();
+    return undefined;
   }
   async function togglePublish(ev: Ev) {
     const { error } = await supabase.from("events").update({ published: !ev.published }).eq("id", ev.id);

@@ -59,6 +59,7 @@ function AuthPage() {
       toast.success("Account created — check your email to confirm, then sign in.");
       setMode("in");
     }
+    return undefined;
   }
 
   const field = "w-full rounded-lg border border-input bg-muted/40 py-3 pl-11 pr-11 text-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/30";

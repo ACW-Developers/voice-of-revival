@@ -1,7 +1,8 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 
-async function stripe(path: string, init?: { method?: string; body?: URLSearchParams }) {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+async function stripe(path: string, init?: { method?: string; body?: URLSearchParams }): Promise<any> {
   const key = process.env["STRIPE_SECRET_KEY"];
   if (!key) throw new Error("Online ticketing is not configured yet.");
   const res = await fetch(`https://api.stripe.com/v1/${path}`, {
@@ -10,9 +11,9 @@ async function stripe(path: string, init?: { method?: string; body?: URLSearchPa
       Authorization: `Bearer ${key}`,
       "Content-Type": "application/x-www-form-urlencoded",
     },
-    body: init?.body,
+    ...(init?.body ? { body: init.body } : {}),
   });
-  const json = (await res.json()) as Record<string, any>;
+  const json = await res.json();
   if (!res.ok) {
     console.error("Stripe error", json?.error?.message);
     throw new Error("Payment service error. Please try again.");
