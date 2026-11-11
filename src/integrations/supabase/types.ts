@@ -166,6 +166,19 @@ export type Database = {
         }
         Returns: boolean
       }
+      record_ticket: {
+        Args: {
+          p_amount: number
+          p_currency: string
+          p_email: string
+          p_event_id: string
+          p_name: string
+          p_quantity: number
+          p_secret: string
+          p_session_id: string
+        }
+        Returns: Json
+      }
     }
     Enums: {
       app_role: "admin" | "user"
