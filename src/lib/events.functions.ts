@@ -1,5 +1,22 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
+import { createClient } from "@supabase/supabase-js";
+import type { Database } from "@/integrations/supabase/types";
+
+function publicDb() {
+  const key = process.env["SUPABASE_PUBLISHABLE_KEY"]!;
+  return createClient<Database>(process.env["SUPABASE_URL"]!, key, {
+    auth: { persistSession: false, autoRefreshToken: false },
+    global: {
+      fetch: (input, init) => {
+        const h = new Headers(init?.headers);
+        if (h.get("Authorization") === `Bearer ${key}`) h.delete("Authorization");
+        h.set("apikey", key);
+        return fetch(input, { ...init, headers: h });
+      },
+    },
+  });
+}
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 async function stripe(path: string, init?: { method?: string; body?: URLSearchParams }): Promise<any> {
@@ -32,8 +49,7 @@ export const createTicketCheckout = createServerFn({ method: "POST" })
       .parse(d),
   )
   .handler(async ({ data }) => {
-    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-    const { data: ev } = await supabaseAdmin
+    const { data: ev } = await publicDb()
       .from("events")
       .select("*")
       .eq("id", data.eventId)
@@ -63,40 +79,19 @@ export const confirmTicket = createServerFn({ method: "POST" })
   .handler(async ({ data }) => {
     const s = await stripe(`checkout/sessions/${encodeURIComponent(data.sessionId)}`);
     if (s.payment_status !== "paid") return { paid: false as const };
-    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-    const eventId = s.metadata?.event_id as string;
-    const quantity = Number(s.metadata?.quantity ?? 1);
-    let { data: ticket } = await supabaseAdmin
-      .from("tickets")
-      .select("*")
-      .eq("stripe_session_id", s.id)
-      .maybeSingle();
-    if (!ticket) {
-      const ins = await supabaseAdmin
-        .from("tickets")
-        .insert({
-          event_id: eventId,
-          stripe_session_id: s.id,
-          buyer_name: s.customer_details?.name ?? null,
-          buyer_email: s.customer_details?.email ?? null,
-          quantity,
-          amount_cents: s.amount_total,
-          currency: s.currency,
-        })
-        .select("*")
-        .single();
-      ticket = ins.data;
-      if (ticket) {
-        const { data: ev } = await supabaseAdmin.from("events").select("tickets_sold").eq("id", eventId).single();
-        if (ev) await supabaseAdmin.from("events").update({ tickets_sold: ev.tickets_sold + quantity }).eq("id", eventId);
-      } else {
-        ticket = (await supabaseAdmin.from("tickets").select("*").eq("stripe_session_id", s.id).single()).data;
-      }
-    }
-    const { data: ev } = await supabaseAdmin
-      .from("events")
-      .select("title, starts_at, venue")
-      .eq("id", eventId)
-      .single();
-    return { paid: true as const, ticket: ticket!, event: ev! };
+    const secret = process.env["TICKET_SECRET"];
+    if (!secret) throw new Error("Ticketing is not configured yet.");
+    const { data: r, error } = await publicDb().rpc("record_ticket", {
+      p_secret: secret,
+      p_session_id: s.id,
+      p_event_id: s.metadata?.event_id as string,
+      p_quantity: Number(s.metadata?.quantity ?? 1),
+      p_amount: s.amount_total,
+      p_currency: s.currency,
+      p_name: s.customer_details?.name ?? null,
+      p_email: s.customer_details?.email ?? null,
+    } as never);
+    if (error || !r) throw new Error("Could not record your ticket. Please contact us.");
+    const out = r as unknown as { ticket: Database["public"]["Tables"]["tickets"]["Row"]; event: { title: string; starts_at: string; venue: string } };
+    return { paid: true as const, ticket: out.ticket, event: out.event };
   });

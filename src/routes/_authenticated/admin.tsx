@@ -28,7 +28,7 @@ type Ev = Tables<"events">;
 const schema = z.object({
   title: z.string().trim().min(1, "Title is required").max(150),
   description: z.string().trim().max(3000),
-  poster_url: z.union([z.literal(""), z.string().trim().url("Poster must be a valid image URL")]),
+  poster_url: z.string(),
   starts_at: z.string().min(1, "Date is required"),
   venue: z.string().trim().min(1, "Venue is required").max(200),
   price: z.coerce.number().min(0).max(100000),
@@ -179,7 +179,10 @@ function Admin() {
             <div className="mt-6 grid gap-4 sm:grid-cols-2">
               <label className="sm:col-span-2 text-sm font-semibold">Title<input className={`${input} mt-1.5`} value={editing.form.title} onChange={(e) => set("title", e.target.value)} /></label>
               <label className="sm:col-span-2 text-sm font-semibold">Description<textarea rows={4} className={`${input} mt-1.5`} value={editing.form.description} onChange={(e) => set("description", e.target.value)} /></label>
-              <label className="sm:col-span-2 text-sm font-semibold">Poster image URL<input className={`${input} mt-1.5`} placeholder="https://…" value={editing.form.poster_url} onChange={(e) => set("poster_url", e.target.value)} /></label>
+              <label className="sm:col-span-2 text-sm font-semibold">Poster image
+                <input type="file" accept="image/*" className={`${input} mt-1.5`} onChange={async (e) => { const f = e.target.files?.[0]; if (f) { try { set("poster_url", await shrinkImage(f)); } catch { toast.error("Could not read that image"); } } }} />
+                {editing.form.poster_url && <span className="mt-2 flex items-center gap-3"><img src={editing.form.poster_url} alt="" className="h-20 w-32 rounded-md object-cover" /><button type="button" className="text-xs underline" onClick={() => set("poster_url", "")}>Remove</button></span>}
+              </label>
               <label className="text-sm font-semibold">Date & time<input type="datetime-local" className={`${input} mt-1.5`} value={editing.form.starts_at} onChange={(e) => set("starts_at", e.target.value)} /></label>
               <label className="text-sm font-semibold">Venue<input className={`${input} mt-1.5`} value={editing.form.venue} onChange={(e) => set("venue", e.target.value)} /></label>
               <label className="text-sm font-semibold">Ticket price (0 = free)<input type="number" min={0} step="0.01" className={`${input} mt-1.5`} value={String(editing.form.price)} onChange={(e) => set("price", e.target.value)} /></label>
@@ -196,4 +199,20 @@ function Admin() {
       )}
     </div>
   );
+}
+
+function shrinkImage(file: File): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.onload = () => {
+      const scale = Math.min(1, 1200 / Math.max(img.width, img.height));
+      const c = document.createElement("canvas");
+      c.width = Math.round(img.width * scale); c.height = Math.round(img.height * scale);
+      c.getContext("2d")!.drawImage(img, 0, 0, c.width, c.height);
+      URL.revokeObjectURL(img.src);
+      resolve(c.toDataURL("image/jpeg", 0.8));
+    };
+    img.onerror = reject;
+    img.src = URL.createObjectURL(file);
+  });
 }
