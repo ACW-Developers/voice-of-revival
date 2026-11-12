@@ -139,10 +139,10 @@
 }
 
 @theme inline {
-  --font-hero: "Quicksand", sans-serif;
-  --font-revival: "Great Vibes", cursive;
+  --font-hero: "Montserrat", sans-serif;
+  --font-revival: "Montserrat", sans-serif;
   --font-display: "Anton", "Impact", sans-serif;
-  --font-sans: "Quicksand", system-ui, sans-serif;
+  --font-sans: "Manrope", system-ui, sans-serif;
 }
 
 html {
