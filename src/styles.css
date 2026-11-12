@@ -62,6 +62,7 @@
   --color-photo-foreground: var(--photo-foreground);
   --color-photo-background: var(--photo-background);
   --color-photo-accent: var(--photo-accent);
+  --color-hero-accent: var(--hero-accent);
 }
 
 :root {
@@ -70,6 +71,7 @@
   --photo-foreground: oklch(0.98 0.003 20);
   --photo-background: oklch(0.13 0.005 20);
   --photo-accent: oklch(0.72 0.19 27);
+  --hero-accent: oklch(0.58 0.23 27);
   --background: oklch(0.13 0.005 20);
   --foreground: oklch(0.96 0.003 20);
   --card: oklch(0.17 0.006 20);

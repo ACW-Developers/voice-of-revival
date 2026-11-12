@@ -37,7 +37,7 @@ export function AdminAnalytics() {
   const gifts=donations.data ?? [];
   const giftTotal=gifts.reduce((sum,d)=>sum+d.amount_cents,0);
   const donors=new Set(gifts.map(d=>d.donation_orders?.email)).size;
-  const cards=[{label:"Ticket purchases",value:totals.orders,icon:ShoppingBag},{label:"Tickets purchased",value:totals.tickets,icon:Ticket},{label:"Ticket revenue",value:money(totals.revenue),icon:Receipt},{label:"Donations received",value:formatPrice(giftTotal,"usd"),icon:HandHeart}];
+  const cards=[{label:"Ticket purchases",value:totals.orders,icon:ShoppingBag},{label:"Tickets purchased",value:totals.tickets,icon:Ticket},{label:"Ticket revenue",value:money(totals.revenue),icon:Receipt},{label:"Donations received",value:giftTotal ? formatPrice(giftTotal,"usd") : "$0.00",icon:HandHeart}];
   return <section className="mt-8 border-y border-border py-8">
     <div className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-3"><h2 className="font-display text-2xl uppercase">Giving & Ticket Analytics</h2><Button variant="outline" size="icon" title="Refresh payment history" aria-label="Refresh payment history" disabled={donations.isFetching || tickets.isFetching} onClick={()=>{void tickets.refetch();void donations.refetch();}}><RefreshCw className={donations.isFetching ? "animate-spin" : ""}/></Button></div>
     {(tickets.isError || donations.isError || syncError) && <p role="alert" className="mt-3 text-sm text-destructive">{syncError || "Some financial data could not load. Please refresh."}</p>}

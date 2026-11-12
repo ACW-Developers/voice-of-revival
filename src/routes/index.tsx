@@ -182,7 +182,7 @@ function Hero() {
         >
           VOICE OF
           <br />
-          <span className="text-photo-accent">REVIVAL</span>
+          <span className="text-hero-accent">REVIVAL</span>
         </h1>
         <p
           className="animate-rise mt-7 max-w-xl text-lg text-photo-foreground/85"

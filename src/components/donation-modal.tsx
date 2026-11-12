@@ -219,7 +219,7 @@ export function DonationModal({ logo }: { logo: string }) {
             >
               <Info className="h-5 w-5 shrink-0 text-primary" />
               <p>
-                {errors.payment} No payment has been taken by this form.
+                {errors["payment"]} No payment has been taken by this form.
               </p>
             </div>
           )}
