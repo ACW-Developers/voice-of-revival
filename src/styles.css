@@ -204,16 +204,6 @@ html {
 .theme-toggle-thumb.is-light {
   transform: translateX(-32px);
 }
-.hero-static-background {
-  clip-path: inset(0);
-}
-.hero-static-image {
-  position: fixed;
-  inset: 0;
-  width: 100%;
-  height: min(850px, 92svh);
-  object-fit: cover;
-}
 .hero-frame {
   position: absolute;
   inset: 0;

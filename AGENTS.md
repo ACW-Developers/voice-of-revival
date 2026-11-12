@@ -11,7 +11,7 @@
 
 <!-- LOVABLE:END -->
 
-- Keep the stationary, section-clipped hero photograph in the focused hero-carousel component; foreground animation remains independent and unchanged.
+- Keep the hero background slideshow and its motion in the focused hero-carousel component; foreground animation remains independent and unchanged.
 - Music thumbnails activate inline privacy-enhanced YouTube players, with only one player mounted to avoid simultaneous audio and unnecessary initial loading.
 - Apply persistent theme selection through root data-theme and semantic CSS tokens; photographic sections retain dedicated contrast tokens for readability in either theme.
 - Netlify deploys build with NITRO_PRESET=netlify (set in netlify.toml), publishing dist; Lovable builds ignore it and stay on Cloudflare. npm + package-lock.json is the package manager.
