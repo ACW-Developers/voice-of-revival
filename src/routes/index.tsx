@@ -1,8 +1,10 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useState } from "react";
-import { z } from "zod";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import {
+  Ticket,
+  Play,
+  MessageCircle,
   Menu,
   X,
   Music2,
@@ -29,6 +31,11 @@ import worship from "@/assets/worship_cross.jpg";
 import groupA from "@/assets/ministers_jj.jpg";
 import groupB from "@/assets/ministers_DSC04498.jpg";
 import groupC from "@/assets/ministers_DSC04460.jpg";
+import amen from "@/assets/amen.asset.json";
+import nimuze from "@/assets/nimuze.asset.json";
+import bihozagara from "@/assets/bihozagara.asset.json";
+import mukomere from "@/assets/ni-mukomere.asset.json";
+import { contactSchema, enquiryUrl } from "@/lib/giving";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -87,11 +94,13 @@ function Heading({
 
 function Nav() {
   const [open, setOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+  useEffect(() => { const update = () => setScrolled(window.scrollY > 32); update(); window.addEventListener("scroll", update, { passive: true }); return () => window.removeEventListener("scroll", update); }, []);
   return (
-    <header className="fixed inset-x-0 top-0 z-50 border-b border-border bg-background/80 backdrop-blur-md">
+    <header className={`fixed inset-x-0 top-0 z-50 border-b border-border backdrop-blur-md transition-all duration-300 ${scrolled ? "bg-background/95 shadow-lg" : "bg-background/80"}`}>
       <nav className="mx-auto grid h-18 max-w-7xl grid-cols-[minmax(0,1fr)_auto] items-center gap-3 px-5 py-3 lg:flex lg:justify-between">
         <a href="#home" aria-label="Voice of Revival home" className="shrink-0">
-          <img src={logo} alt="Voice of Revival" className="h-10 max-w-full w-auto" />
+          <img src={logo} alt="Voice of Revival" className={`h-12 max-w-full w-auto transition-transform duration-300 ${scrolled ? "scale-95" : "scale-100"}`} />
         </a>
         <ul className="hidden min-w-0 items-center gap-5 lg:flex">
           {NAV.map(([id, label]) => (
@@ -165,18 +174,18 @@ function Hero() {
     >
       <HeroCarousel />
       <div className="pointer-events-none absolute inset-0 z-10 bg-hero-overlay" />
-      <div className="relative z-10 mx-auto max-w-5xl px-5 pb-24 pt-32 text-center">
+      <div className="relative z-10 mx-auto w-full max-w-7xl px-5 pb-20 pt-32 text-left">
         <p className="eyebrow animate-rise text-primary">A Christ-centred worship movement</p>
         <h1
-          className="animate-rise mt-6 font-display text-5xl uppercase leading-[1] md:text-8xl"
+          className="hero-title animate-rise mt-6 font-hero uppercase leading-[1.02] text-photo-foreground"
           style={{ animationDelay: "0.1s" }}
         >
-          Different Voices. One Purpose.
+          VOICE OF
           <br />
-          <span className="text-primary">One Sound</span> for His Glory.
+          <span className="text-hero-accent">REVIVAL</span>
         </h1>
         <p
-          className="animate-rise mx-auto mt-8 max-w-2xl text-lg text-photo-foreground/85"
+          className="animate-rise mt-7 max-w-xl text-lg text-photo-foreground/85"
           style={{ animationDelay: "0.25s" }}
         >
           A Christ-centred worship movement bringing people together through authentic worship,
@@ -184,18 +193,11 @@ function Hero() {
           fellowship, and meaningful service.
         </p>
         <div
-          className="animate-rise mt-10 flex flex-col justify-center gap-4 sm:flex-row"
+          className="animate-rise mt-9 flex flex-col items-start gap-4 sm:flex-row"
           style={{ animationDelay: "0.4s" }}
         >
-          <a href="#about" className={btnPrimary}>
-            Discover Our Movement
-          </a>
-          <a
-            href="#events"
-            className={`${btn} border border-photo-foreground/40 text-photo-foreground hover:bg-photo-foreground hover:text-photo-background`}
-          >
-            Join Us in Worship
-          </a>
+          <Button asChild className={btnPrimary}><a href="#events"><Ticket /> Buy Tickets</a></Button>
+          <Button variant="outline" onClick={openDonation} className={`${btn} bg-transparent border-photo-foreground/40 text-photo-foreground hover:bg-photo-foreground hover:text-photo-background`}><HandHeart /> Donate Now</Button>
         </div>
       </div>
     </section>
@@ -376,54 +378,30 @@ function Events() {
   );
 }
 
+const SONGS = [
+  { artist: "AIME FRANK", song: "AMEN", id: "LX92z1sIP_M", image: amen.url },
+  { artist: "JACQUES & KAMARIZA", song: "NIMUZE MUREBE", id: "suRn79jcGfs", image: nimuze.url },
+  { artist: "BONKE", song: "BIHOZAGARA", id: "FA4Cv_Itj0s", image: bihozagara.url },
+  { artist: "KADOGO", song: "NI MUKOMERE", id: "TTG1fyctilg", image: mukomere.url },
+];
 function MusicSection() {
-  return (
-    <section id="music" className="relative overflow-hidden py-24 md:py-32">
-      <div className="mx-auto grid max-w-7xl items-center gap-12 px-5 lg:grid-cols-2">
-        <div>
-          <p className="eyebrow">Music & Worship</p>
-          <h2 className="mt-4 font-display text-4xl uppercase leading-[1.05] md:text-6xl">
-            The Sound of Revival
-          </h2>
-          <p className="mt-6 text-lg text-muted-foreground">
-            Discover the heart of Voice of Revival through uplifting gospel music, powerful worship,
-            and inspiring expressions of faith. Every song is an opportunity to draw closer to
-            Christ, strengthen our fellowship, and share a message of hope that reaches beyond the
-            stage.
-          </p>
-          <a href="#contact" className={`${btnGhost} mt-10`}>
-            Explore Our Music
-          </a>
-        </div>
-        <div className="grid grid-cols-2 gap-4">
-          {["Releases", "Worship Videos", "Live Performances", "Coming Soon"].map((t, i) => (
-            <div
-              key={t}
-              className={`flex aspect-square min-w-0 flex-col justify-end rounded-lg border border-border p-4 transition-transform duration-300 hover:-translate-y-1 sm:p-5 ${i === 0 ? "bg-red-gradient text-primary-foreground" : "bg-card"}`}
-            >
-              <Music2 className="mb-auto h-6 w-6" />
-              <p className="break-words font-display text-lg uppercase sm:text-xl">{t}</p>
-            </div>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
+  return <section id="music" className="py-24 md:py-32"><div className="mx-auto max-w-7xl px-5">
+    <div className="grid gap-6 md:grid-cols-2 md:items-end"><div><p className="eyebrow">Music & Worship</p><h2 className="mt-4 font-display text-4xl uppercase md:text-6xl">The Sound of Revival</h2></div><p className="max-w-xl text-lg text-muted-foreground">Songs of faith, hope and worship from the voices behind our movement.</p></div>
+    <div className="mt-12 grid gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4">
+      {SONGS.map(s => <a key={s.id} href={`https://www.youtube.com/watch?v=${s.id}`} target="_blank" rel="noopener noreferrer" aria-label={`Watch ${s.song} by ${s.artist} on YouTube`} className="group min-w-0">
+        <div className="relative aspect-video overflow-hidden rounded-lg bg-muted"><img src={s.image} alt={`${s.artist} — ${s.song}`} loading="lazy" className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"/><span className="absolute inset-0 grid place-items-center bg-photo-background/15"><span className="grid h-12 w-12 place-items-center rounded-full bg-primary text-primary-foreground shadow-glow transition-transform group-hover:scale-110"><Play className="h-5 w-5 fill-current"/></span></span></div>
+        <p className="mt-5 text-xs font-bold text-primary">{s.artist}</p><h3 className="mt-1 font-display text-2xl uppercase">{s.song}</h3>
+      </a>)}
+    </div>
+  </div></section>;
 }
 
 function Support() {
   return (
     <section
       id="support"
-      className="relative overflow-hidden bg-photo-background py-28 text-photo-foreground md:py-40"
+      className="support-parallax relative overflow-hidden bg-photo-background py-28 text-photo-foreground md:py-40"
     >
-      <img
-        src={worship}
-        alt=""
-        aria-hidden
-        className="absolute inset-0 h-full w-full object-cover"
-        loading="lazy"
-      />
       <div className="absolute inset-0 bg-photo-background/85" />
       <div className="relative mx-auto max-w-3xl px-5 text-center">
         <p className="eyebrow text-photo-accent">Support the Movement</p>
@@ -436,24 +414,18 @@ function Support() {
           to communities in need. Your support, partnership, and prayers help us take this vision
           beyond the stage and make a meaningful Kingdom impact.
         </p>
-        <button type="button" onClick={openDonation} className={`${btnPrimary} mt-10`}>
-          Donate Now
-        </button>
+        <Button onClick={openDonation} className={`${btnPrimary} mt-10`}><HandHeart /> Donate Now</Button>
       </div>
     </section>
   );
 }
 
-const schema = z.object({
-  name: z.string().trim().min(1, "Please enter your name").max(100),
-  email: z.string().trim().email("Please enter a valid email").max(255),
-  subject: z.string().trim().min(1, "Please add a subject").max(150),
-  message: z.string().trim().min(1, "Please write a message").max(2000),
-});
+const schema = contactSchema;
 
 function Contact() {
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [sending, setSending] = useState(false);
+  const [whatsapp, setWhatsapp] = useState<string | null>(null);
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const form = e.currentTarget;
@@ -470,8 +442,11 @@ function Contact() {
       toast.error("Sorry, your message couldn't be sent. Please try again.");
       return;
     }
+    const url = enquiryUrl(parsed.data);
+    setWhatsapp(url);
+    window.open(url, "_blank", "noopener,noreferrer");
     form.reset();
-    toast.success("Thank you! Your message has been received.");
+    toast.success("Enquiry saved. Send the prepared message in WhatsApp.");
   }
   const field =
     "w-full rounded-lg border border-input bg-background px-4 py-3 text-foreground transition-colors placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/15";
@@ -488,7 +463,7 @@ function Contact() {
             of our growing community. We'd love to hear from you.
           </p>
           <div className="mt-8 flex items-center gap-3 text-muted-foreground">
-            <Mail className="h-5 w-5 text-primary" /> Send us a message using the form.
+            <MessageCircle className="h-5 w-5 text-primary" /><a href="https://wa.me/16025836044" target="_blank" rel="noopener noreferrer">+1 (602) 583-6044</a>
           </div>
         </div>
         <form onSubmit={onSubmit} noValidate className="space-y-4">
@@ -533,8 +508,9 @@ function Contact() {
             disabled={sending}
             className={`${btnPrimary} w-full disabled:opacity-60`}
           >
-            {sending ? "Sending…" : "Send Message"}
+            <MessageCircle /> {sending ? "Saving…" : "Continue to WhatsApp"}
           </Button>
+          {whatsapp && <p role="status" className="text-sm text-muted-foreground">Enquiry saved. <a href={whatsapp} target="_blank" rel="noopener noreferrer" className="font-semibold text-primary underline">Open WhatsApp to send</a></p>}
         </form>
       </div>
     </section>

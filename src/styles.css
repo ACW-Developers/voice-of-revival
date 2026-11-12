@@ -62,6 +62,7 @@
   --color-photo-foreground: var(--photo-foreground);
   --color-photo-background: var(--photo-background);
   --color-photo-accent: var(--photo-accent);
+  --color-hero-accent: var(--hero-accent);
 }
 
 :root {
@@ -70,6 +71,7 @@
   --photo-foreground: oklch(0.98 0.003 20);
   --photo-background: oklch(0.13 0.005 20);
   --photo-accent: oklch(0.72 0.19 27);
+  --hero-accent: oklch(0.58 0.23 27);
   --background: oklch(0.13 0.005 20);
   --foreground: oklch(0.96 0.003 20);
   --card: oklch(0.17 0.006 20);
@@ -112,7 +114,7 @@
   --shadow-glow: 0 10px 40px -10px oklch(0.58 0.23 27 / 0.6);
 }
 
-:root[data-theme="light"] {
+:root:not([data-theme="dark"]) {
   color-scheme: light;
   --background: oklch(0.985 0.002 260);
   --foreground: oklch(0.2 0.009 20);
@@ -137,6 +139,7 @@
 }
 
 @theme inline {
+  --font-hero: "Montserrat", sans-serif;
   --font-display: "Anton", "Impact", sans-serif;
   --font-sans: "Manrope", system-ui, sans-serif;
 }
@@ -302,6 +305,12 @@ html {
 .marquee-track {
   animation: marquee 40s linear infinite;
 }
+
+.support-parallax { background-image: url('./assets/worship_cross.jpg'); background-size: cover; background-position: center; background-attachment: fixed; }
+.hero-title { font-size: 4rem; font-weight: 800; letter-spacing: 0; }
+@media (min-width: 768px) { .hero-title { font-size: 6.5rem; } }
+@media (max-width: 420px) { .hero-title { font-size: 3rem; } }
+@media (max-width: 767px), (prefers-reduced-motion: reduce) { .support-parallax { background-attachment: scroll; } }
 .marquee:hover .marquee-track {
   animation-play-state: paused;
 }

@@ -3,9 +3,11 @@ import { z } from "zod";
 import { createClient } from "@supabase/supabase-js";
 import type { Database } from "@/integrations/supabase/types";
 
-function publicDb() {
-  const key = process.env["SUPABASE_PUBLISHABLE_KEY"]!;
-  return createClient<Database>(process.env["SUPABASE_URL"]!, key, {
+export function publicDb() {
+  const key = process.env["SUPABASE_PUBLISHABLE_KEY"];
+  const url = process.env["SUPABASE_URL"];
+  if (!key || !url) throw new Error("Website connection is not configured.");
+  return createClient<Database>(url, key, {
     auth: { persistSession: false, autoRefreshToken: false },
     global: {
       fetch: (input, init) => {
@@ -19,7 +21,7 @@ function publicDb() {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-async function stripe(path: string, init?: { method?: string; body?: URLSearchParams }): Promise<any> {
+export async function stripe(path: string, init?: { method?: string; body?: URLSearchParams }): Promise<any> {
   const key = process.env["STRIPE_SECRET_KEY"];
   if (!key) throw new Error("Online ticketing is not configured yet.");
   const res = await fetch(`https://api.stripe.com/v1/${path}`, {
