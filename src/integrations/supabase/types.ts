@@ -41,6 +41,86 @@ export type Database = {
         }
         Relationships: []
       }
+      donation_orders: {
+        Row: {
+          amount_cents: number
+          anonymous: boolean
+          created_at: string
+          email: string
+          frequency: string
+          id: string
+          message: string
+          name: string
+          phone: string
+          stripe_session_id: string | null
+          subscription_id: string | null
+        }
+        Insert: {
+          amount_cents: number
+          anonymous?: boolean
+          created_at?: string
+          email: string
+          frequency: string
+          id?: string
+          message?: string
+          name?: string
+          phone?: string
+          stripe_session_id?: string | null
+          subscription_id?: string | null
+        }
+        Update: {
+          amount_cents?: number
+          anonymous?: boolean
+          created_at?: string
+          email?: string
+          frequency?: string
+          id?: string
+          message?: string
+          name?: string
+          phone?: string
+          stripe_session_id?: string | null
+          subscription_id?: string | null
+        }
+        Relationships: []
+      }
+      donations: {
+        Row: {
+          amount_cents: number
+          created_at: string
+          currency: string
+          id: string
+          order_id: string
+          paid_at: string
+          payment_id: string
+        }
+        Insert: {
+          amount_cents: number
+          created_at?: string
+          currency: string
+          id?: string
+          order_id: string
+          paid_at: string
+          payment_id: string
+        }
+        Update: {
+          amount_cents?: number
+          created_at?: string
+          currency?: string
+          id?: string
+          order_id?: string
+          paid_at?: string
+          payment_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "donations_order_id_fkey"
+            columns: ["order_id"]
+            isOneToOne: false
+            referencedRelation: "donation_orders"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       events: {
         Row: {
           capacity: number
@@ -165,6 +245,10 @@ export type Database = {
           _user_id: string
         }
         Returns: boolean
+      }
+      manage_donation: {
+        Args: { p_action: string; p_data: Json; p_secret: string }
+        Returns: Json
       }
       record_ticket: {
         Args: {
