@@ -8,6 +8,9 @@ import { supabase } from "@/integrations/supabase/client";
 import type { Tables } from "@/integrations/supabase/types";
 import { formatDate, formatPrice } from "@/components/events-section";
 import logo from "@/assets/vor_logo.png";
+import { AdminAnalytics } from "@/components/admin-analytics";
+import { PosterLightbox } from "@/components/poster-lightbox";
+import { ThemeToggle } from "@/components/theme-toggle";
 
 export const Route = createFileRoute("/_authenticated/admin")({
   head: () => ({
@@ -53,7 +56,8 @@ function Admin() {
     queryKey: ["is-admin"],
     queryFn: async () => {
       const { data: u } = await supabase.auth.getUser();
-      const { data } = await supabase.rpc("has_role", { _user_id: u.user!.id, _role: "admin" });
+      if (!u.user) return { isAdmin: false };
+      const { data } = await supabase.rpc("has_role", { _user_id: u.user.id, _role: "admin" });
       return { isAdmin: !!data, email: u.user?.email };
     },
   });
@@ -79,7 +83,7 @@ function Admin() {
   async function save() {
     if (!editing) return;
     const r = schema.safeParse(editing.form);
-    if (!r.success) return toast.error(r.error.issues[0]!.message);
+    if (!r.success) return toast.error(r.error.issues[0]?.message ?? "Check your event details");
     const { price, ...rest } = r.data;
     const row = { ...rest, poster_url: rest.poster_url || null, currency: rest.currency.toLowerCase(), price_cents: Math.round(price * 100), starts_at: new Date(rest.starts_at).toISOString(), updated_at: new Date().toISOString() };
     const { error } = editing.id
@@ -108,6 +112,7 @@ function Admin() {
         <div className="mx-auto flex max-w-7xl items-center justify-between px-5 py-4">
           <Link to="/" className="flex items-center gap-3"><img src={logo} alt="Voice of Revival" className="h-9 w-auto" /><span className="hidden font-display uppercase sm:inline">Admin</span></Link>
           <div className="flex items-center gap-4 text-sm">
+            <ThemeToggle />
             <span className="hidden text-muted-foreground md:inline">{role.data?.email}</span>
             <button onClick={signOut} className="inline-flex items-center gap-2 rounded-lg border border-border px-3 py-2 hover:bg-muted"><LogOut className="h-4 w-4" /> Sign out</button>
           </div>
@@ -127,11 +132,12 @@ function Admin() {
               <button onClick={() => setEditing({ form: empty })} className="inline-flex items-center gap-2 rounded-lg bg-red-gradient px-5 py-3 text-sm font-bold uppercase tracking-widest text-primary-foreground shadow-glow"><Plus className="h-4 w-4" /> New Event</button>
             </div>
 
+            <AdminAnalytics />
             <div className="mt-8 grid gap-4">
               {events.data?.length === 0 && <p className="rounded-lg border border-dashed border-border p-8 text-center text-muted-foreground">No events yet — create your first one.</p>}
               {events.data?.map((ev) => (
                 <div key={ev.id} className="flex flex-col gap-4 rounded-lg border border-border bg-card p-4 sm:flex-row sm:items-center">
-                  {ev.poster_url ? <img src={ev.poster_url} alt="" className="h-20 w-full rounded-md object-cover sm:w-32" /> : <div className="h-20 w-full rounded-md bg-muted sm:w-32" />}
+                  {ev.poster_url ? <div className="h-20 w-full shrink-0 overflow-hidden rounded-md sm:w-32"><PosterLightbox src={ev.poster_url} title={ev.title}/></div> : <div className="h-20 w-full rounded-md bg-muted sm:w-32" />}
                   <div className="min-w-0 flex-1">
                     <div className="flex flex-wrap items-center gap-2">
                       <h3 className="truncate font-bold">{ev.title}</h3>
@@ -208,7 +214,9 @@ function shrinkImage(file: File): Promise<string> {
       const scale = Math.min(1, 1200 / Math.max(img.width, img.height));
       const c = document.createElement("canvas");
       c.width = Math.round(img.width * scale); c.height = Math.round(img.height * scale);
-      c.getContext("2d")!.drawImage(img, 0, 0, c.width, c.height);
+      const context = c.getContext("2d");
+      if (!context) { URL.revokeObjectURL(img.src); reject(new Error("Image processing unavailable")); return; }
+      context.drawImage(img, 0, 0, c.width, c.height);
       URL.revokeObjectURL(img.src);
       resolve(c.toDataURL("image/jpeg", 0.8));
     };

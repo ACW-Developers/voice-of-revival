@@ -5,6 +5,7 @@ import { toast } from "sonner";
 import { useServerFn } from "@tanstack/react-start";
 import { supabase } from "@/integrations/supabase/client";
 import { createTicketCheckout } from "@/lib/events.functions";
+import { PosterLightbox } from "@/components/poster-lightbox";
 import type { Tables } from "@/integrations/supabase/types";
 
 type Ev = Tables<"events">;
@@ -41,12 +42,11 @@ function EventCard({ ev, poster }: { ev: Ev; poster: string }) {
   return (
     <article className="group flex flex-col overflow-hidden rounded-lg border border-border bg-background transition-all duration-500 hover:-translate-y-1 hover:border-primary/60 hover:shadow-glow">
       <div className="relative aspect-[4/3] overflow-hidden">
-        <img src={ev.poster_url || poster} alt={ev.title} loading="lazy"
-          className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105" />
-        <span className="absolute left-3 top-3 rounded-md bg-background/85 px-3 py-1 text-xs font-bold uppercase tracking-widest backdrop-blur">
+        <PosterLightbox src={ev.poster_url || poster} title={ev.title} />
+        <span className="pointer-events-none absolute left-3 top-3 rounded-md bg-background/85 px-3 py-1 text-xs font-bold uppercase tracking-widest backdrop-blur">
           {formatPrice(ev.price_cents, ev.currency)}
         </span>
-        <span className={`absolute right-3 top-3 rounded-md px-3 py-1 text-xs font-bold uppercase tracking-widest ${soldOut ? "bg-destructive text-destructive-foreground" : "bg-primary text-primary-foreground"}`}>
+        <span className={`pointer-events-none absolute right-3 top-3 rounded-md px-3 py-1 text-xs font-bold uppercase tracking-widest ${soldOut ? "bg-destructive text-destructive-foreground" : "bg-primary text-primary-foreground"}`}>
           {soldOut ? "Sold out" : `${left} left`}
         </span>
       </div>
