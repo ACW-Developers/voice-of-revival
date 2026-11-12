@@ -26,6 +26,7 @@ export const createDonationCheckout = createServerFn({ method: "POST" })
       "line_items[0][price_data][product]": "prod_Vc7M1KdRte7fwe",
       "line_items[0][price_data][currency]": "usd",
       "line_items[0][price_data][unit_amount]": String(order.amount_cents),
+      "adaptive_pricing[enabled]": "false",
     });
     if (data.frequency === "monthly") {
       body.set("line_items[0][price_data][recurring][interval]", "month");
@@ -52,8 +53,13 @@ export const syncDonations = createServerFn({ method: "POST" })
   .handler(async ({ context }) => {
     const { data: isAdmin, error: roleError } = await context.supabase.rpc("has_role", { _user_id: context.userId, _role: "admin" });
     if (roleError || !isAdmin) throw new Error("Administrator access required.");
-    const { data: orders, error } = await context.supabase.from("donation_orders").select("id,stripe_session_id,subscription_id");
-    if (error) throw new Error("Could not load donation orders.");
+    const orders = [];
+    for (let from=0;;from+=1000) {
+      const { data, error } = await context.supabase.from("donation_orders").select("id,stripe_session_id,subscription_id").order("id").range(from,from+999);
+      if (error) throw new Error("Could not load donation orders.");
+      orders.push(...data);
+      if (data.length < 1000) break;
+    }
     for (const order of orders ?? []) {
       if (!order.stripe_session_id) continue;
       const session = await stripe(`checkout/sessions/${encodeURIComponent(order.stripe_session_id)}`);
