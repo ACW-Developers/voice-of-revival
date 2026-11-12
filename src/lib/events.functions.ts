@@ -21,7 +21,10 @@ export function publicDb() {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export async function stripe(path: string, init?: { method?: string; body?: URLSearchParams }): Promise<any> {
+export async function stripe(
+  path: string,
+  init?: { method?: string; body?: URLSearchParams },
+): Promise<any> {
   const key = process.env["STRIPE_SECRET_KEY"];
   if (!key) throw new Error("Online ticketing is not configured yet.");
   const res = await fetch(`https://api.stripe.com/v1/${path}`, {
@@ -58,7 +61,7 @@ export const createTicketCheckout = createServerFn({ method: "POST" })
       .eq("published", true)
       .maybeSingle();
     if (!ev) throw new Error("Event not found.");
-    if (ev.price_cents <= 0) throw new Error("This event is free — no ticket purchase needed.");
+    if (ev.price_cents <= 0) throw new Error("This event is free - no ticket purchase needed.");
     if (ev.capacity - ev.tickets_sold < data.quantity) throw new Error("Not enough tickets left.");
     const origin = new URL(data.origin).origin;
     const body = new URLSearchParams({
@@ -68,7 +71,7 @@ export const createTicketCheckout = createServerFn({ method: "POST" })
       "line_items[0][quantity]": String(data.quantity),
       "line_items[0][price_data][currency]": ev.currency,
       "line_items[0][price_data][unit_amount]": String(ev.price_cents),
-      "line_items[0][price_data][product_data][name]": `Ticket — ${ev.title}`,
+      "line_items[0][price_data][product_data][name]": `Ticket - ${ev.title}`,
       "metadata[event_id]": ev.id,
       "metadata[quantity]": String(data.quantity),
     });
@@ -94,6 +97,9 @@ export const confirmTicket = createServerFn({ method: "POST" })
       p_email: s.customer_details?.email ?? null,
     } as never);
     if (error || !r) throw new Error("Could not record your ticket. Please contact us.");
-    const out = r as unknown as { ticket: Database["public"]["Tables"]["tickets"]["Row"]; event: { title: string; starts_at: string; venue: string } };
+    const out = r as unknown as {
+      ticket: Database["public"]["Tables"]["tickets"]["Row"];
+      event: { title: string; starts_at: string; venue: string };
+    };
     return { paid: true as const, ticket: out.ticket, event: out.event };
   });

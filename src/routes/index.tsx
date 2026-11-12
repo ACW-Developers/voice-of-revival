@@ -40,13 +40,13 @@ import { contactSchema, enquiryUrl } from "@/lib/giving";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Voice of Revival — Different Voices. One Sound for His Glory." },
+      { title: "Voice of Revival - Different Voices. One Sound for His Glory." },
       {
         name: "description",
         content:
           "A Christ-centred worship movement uniting believers, empowering Christian creatives and spreading the hope of the Gospel.",
       },
-      { property: "og:title", content: "Voice of Revival — Gospel Worship Movement" },
+      { property: "og:title", content: "Voice of Revival - Gospel Worship Movement" },
       {
         property: "og:description",
         content: "Different voices. One purpose. One sound for His glory.",
@@ -95,12 +95,23 @@ function Heading({
 function Nav() {
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  useEffect(() => { const update = () => setScrolled(window.scrollY > 32); update(); window.addEventListener("scroll", update, { passive: true }); return () => window.removeEventListener("scroll", update); }, []);
+  useEffect(() => {
+    const update = () => setScrolled(window.scrollY > 32);
+    update();
+    window.addEventListener("scroll", update, { passive: true });
+    return () => window.removeEventListener("scroll", update);
+  }, []);
   return (
-    <header className={`fixed inset-x-0 top-0 z-50 border-b border-border backdrop-blur-md transition-all duration-300 ${scrolled ? "bg-background/95 shadow-lg" : "bg-background/80"}`}>
+    <header
+      className={`fixed inset-x-0 top-0 z-50 border-b border-border backdrop-blur-md transition-all duration-300 ${scrolled ? "bg-white shadow-lg" : "bg-white/90"}`}
+    >
       <nav className="mx-auto grid h-18 max-w-7xl grid-cols-[minmax(0,1fr)_auto] items-center gap-3 px-5 py-3 lg:flex lg:justify-between">
         <a href="#home" aria-label="Voice of Revival home" className="shrink-0">
-          <img src={logo} alt="Voice of Revival" className={`h-12 max-w-full w-auto transition-transform duration-300 ${scrolled ? "scale-95" : "scale-100"}`} />
+          <img
+            src={logo}
+            alt="Voice of Revival"
+            className={`h-14 max-w-full w-auto transition-transform duration-300 ${scrolled ? "scale-95" : "scale-100"}`}
+          />
         </a>
         <ul className="hidden min-w-0 items-center gap-5 lg:flex">
           {NAV.map(([id, label]) => (
@@ -175,15 +186,15 @@ function Hero() {
       <HeroCarousel />
       <div className="pointer-events-none absolute inset-0 z-10 bg-hero-overlay" />
       <div className="relative z-10 mx-auto w-full max-w-7xl px-5 pb-20 pt-32 text-left">
-        <p className="eyebrow animate-rise text-primary">A Christ-centred worship movement</p>
-        <h1
-          className="hero-title animate-rise mt-6 font-hero uppercase leading-[1.02] text-photo-foreground"
+        <p className="eyebrow animate-rise text-white/80">A Christ-centred worship movement</p>
+        <h3
+          className="hero-title animate-rise mt-6 font-hero text-4xl sm:text-5xl uppercase leading-[1.02] text-photo-foreground"
           style={{ animationDelay: "0.1s" }}
         >
           VOICE OF
           <br />
-          <span className="font-revival font-bold text-hero-accent">REVIVAL</span>
-        </h1>
+          <span className="font-revival italic font-bold text-hero-accent">REVIVAL</span>
+        </h3>
         <p
           className="animate-rise mt-7 max-w-xl text-lg text-photo-foreground/85"
           style={{ animationDelay: "0.25s" }}
@@ -196,8 +207,18 @@ function Hero() {
           className="animate-rise mt-9 flex flex-col items-start gap-4 sm:flex-row"
           style={{ animationDelay: "0.4s" }}
         >
-          <Button asChild className={btnPrimary}><a href="#events"><Ticket /> Buy Tickets</a></Button>
-          <Button variant="outline" onClick={openDonation} className={`${btn} bg-transparent border-photo-foreground/40 text-photo-foreground hover:bg-photo-foreground hover:text-photo-background`}><HandHeart /> Donate Now</Button>
+          <Button asChild className={btnPrimary}>
+            <a href="#events">
+              <Ticket /> Buy Tickets
+            </a>
+          </Button>
+          <Button
+            variant="outline"
+            onClick={openDonation}
+            className={`${btn} bg-transparent border-photo-foreground/40 text-photo-foreground hover:bg-photo-foreground hover:text-photo-background`}
+          >
+            <HandHeart /> Donate Now
+          </Button>
         </div>
       </div>
     </section>
@@ -223,7 +244,7 @@ function About() {
             A Movement United by Worship.
           </h2>
           <p className="mt-6 text-lg text-muted-foreground">
-            Voice of Revival is a worship movement founded by five ministers — Jacques & Kamariza,
+            Voice of Revival is a worship movement founded by five ministers - Jacques & Kamariza,
             Aime Frank, Bonke, and Kadogo. We exist to glorify Christ, unite believers, empower
             Christian creatives, and inspire transformation through music, fellowship, and service.
           </p>
@@ -370,7 +391,7 @@ function Events() {
       poster={worship}
       heading={
         <Heading eyebrow="Events & Tickets" title="Come Worship, Connect & Experience the Revival.">
-          Worship gatherings, gospel concerts and fellowship events — reserve your place and
+          Worship gatherings, gospel concerts and fellowship events - reserve your place and
           encounter Christ together.
         </Heading>
       }
@@ -386,31 +407,62 @@ const SONGS = [
 ];
 function MusicSection() {
   const [activeVideo, setActiveVideo] = useState<string | null>(null);
-  return <section id="music" className="py-24 md:py-32"><div className="mx-auto max-w-7xl px-5">
-    <div className="grid gap-6 md:grid-cols-2 md:items-end"><div><p className="eyebrow">Music & Worship</p><h2 className="mt-4 font-display text-4xl uppercase md:text-6xl">The Sound of Revival</h2></div><p className="max-w-xl text-lg text-muted-foreground">Songs of faith, hope and worship from the voices behind our movement.</p></div>
-    <div className="mt-12 grid gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4">
-      {SONGS.map(s => <div key={s.id} className="group min-w-0">
-        <div className="relative aspect-video overflow-hidden rounded-lg bg-muted">
-          {activeVideo === s.id ? (
-            <iframe
-              src={`https://www.youtube-nocookie.com/embed/${s.id}?autoplay=1&playsinline=1&rel=0`}
-              title={`${s.artist} — ${s.song}`}
-              className="h-full w-full border-0"
-              allow="autoplay; encrypted-media; picture-in-picture; fullscreen"
-              referrerPolicy="strict-origin-when-cross-origin"
-              allowFullScreen
-            />
-          ) : (
-            <Button variant="ghost" aria-label={`Play ${s.song} by ${s.artist}`} onClick={() => setActiveVideo(s.id)} className="relative h-full w-full overflow-hidden rounded-none p-0 hover:bg-transparent">
-              <img src={s.image} alt={`${s.artist} — ${s.song}`} loading="lazy" className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"/>
-              <span className="absolute inset-0 grid place-items-center bg-photo-background/15"><span className="grid h-12 w-12 place-items-center rounded-full bg-primary text-primary-foreground shadow-glow transition-transform group-hover:scale-110"><Play className="h-5 w-5 fill-current"/></span></span>
-            </Button>
-          )}
+  return (
+    <section id="music" className="py-24 md:py-32">
+      <div className="mx-auto max-w-7xl px-5">
+        <div className="grid gap-6 md:grid-cols-2 md:items-end">
+          <div>
+            <p className="eyebrow">Music & Worship</p>
+            <h2 className="mt-4 font-display text-4xl uppercase md:text-6xl">
+              The Sound of Revival
+            </h2>
+          </div>
+          <p className="max-w-xl text-lg text-muted-foreground">
+            Songs of faith, hope and worship from the voices behind our movement.
+          </p>
         </div>
-        <p className="mt-5 text-xs font-bold text-primary">{s.artist}</p><h3 className="mt-1 font-display text-2xl uppercase">{s.song}</h3>
-      </div>)}
-    </div>
-  </div></section>;
+        <div className="mt-12 grid gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4">
+          {SONGS.map((s) => (
+            <div key={s.id} className="group min-w-0">
+              <div className="relative aspect-video overflow-hidden rounded-lg bg-muted">
+                {activeVideo === s.id ? (
+                  <iframe
+                    src={`https://www.youtube-nocookie.com/embed/${s.id}?autoplay=1&playsinline=1&rel=0`}
+                    title={`${s.artist} - ${s.song}`}
+                    className="h-full w-full border-0"
+                    allow="autoplay; encrypted-media; picture-in-picture; fullscreen"
+                    referrerPolicy="strict-origin-when-cross-origin"
+                    allowFullScreen
+                  />
+                ) : (
+                  <Button
+                    variant="ghost"
+                    aria-label={`Play ${s.song} by ${s.artist}`}
+                    onClick={() => setActiveVideo(s.id)}
+                    className="relative h-full w-full overflow-hidden rounded-none p-0 hover:bg-transparent"
+                  >
+                    <img
+                      src={s.image}
+                      alt={`${s.artist} - ${s.song}`}
+                      loading="lazy"
+                      className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+                    />
+                    <span className="absolute inset-0 grid place-items-center bg-photo-background/15">
+                      <span className="grid h-12 w-12 place-items-center rounded-full bg-primary text-primary-foreground shadow-glow transition-transform group-hover:scale-110">
+                        <Play className="h-5 w-5 fill-current" />
+                      </span>
+                    </span>
+                  </Button>
+                )}
+              </div>
+              <p className="mt-5 text-xs font-bold text-primary">{s.artist}</p>
+              <h3 className="mt-1 font-display text-2xl uppercase">{s.song}</h3>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
 }
 
 function Support() {
@@ -431,7 +483,9 @@ function Support() {
           to communities in need. Your support, partnership, and prayers help us take this vision
           beyond the stage and make a meaningful Kingdom impact.
         </p>
-        <Button onClick={openDonation} className={`${btnPrimary} mt-10`}><HandHeart /> Donate Now</Button>
+        <Button onClick={openDonation} className={`${btnPrimary} mt-10`}>
+          <HandHeart /> Donate Now
+        </Button>
       </div>
     </section>
   );
@@ -480,7 +534,10 @@ function Contact() {
             of our growing community. We'd love to hear from you.
           </p>
           <div className="mt-8 flex items-center gap-3 text-muted-foreground">
-            <MessageCircle className="h-5 w-5 text-primary" /><a href="https://wa.me/16025836044" target="_blank" rel="noopener noreferrer">+1 (602) 583-6044</a>
+            <MessageCircle className="h-5 w-5 text-primary" />
+            <a href="https://wa.me/16025836044" target="_blank" rel="noopener noreferrer">
+              +1 (602) 583-6044
+            </a>
           </div>
         </div>
         <form onSubmit={onSubmit} noValidate className="space-y-4">
@@ -527,7 +584,19 @@ function Contact() {
           >
             <MessageCircle /> {sending ? "Saving…" : "Continue to WhatsApp"}
           </Button>
-          {whatsapp && <p role="status" className="text-sm text-muted-foreground">Enquiry saved. <a href={whatsapp} target="_blank" rel="noopener noreferrer" className="font-semibold text-primary underline">Open WhatsApp to send</a></p>}
+          {whatsapp && (
+            <p role="status" className="text-sm text-muted-foreground">
+              Enquiry saved.{" "}
+              <a
+                href={whatsapp}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="font-semibold text-primary underline"
+              >
+                Open WhatsApp to send
+              </a>
+            </p>
+          )}
         </form>
       </div>
     </section>
@@ -541,7 +610,7 @@ function Footer() {
         <div className="min-w-0">
           <img src={logo} alt="Voice of Revival" className="h-14 w-auto" loading="lazy" />
           <p className="mt-4 text-sm text-muted-foreground">
-            A Christ-centred worship movement — different voices, one purpose, one sound for His
+            A Christ-centred worship movement - different voices, one purpose, one sound for His
             glory.
           </p>
           <button type="button" onClick={openDonation} className={`${btnPrimary} mt-6 px-5`}>
@@ -588,8 +657,8 @@ function Footer() {
             ].map(({ icon: Icon, name }) => (
               <span
                 key={name}
-                title={`${name} — link not yet available`}
-                aria-label={`${name} — link not yet available`}
+                title={`${name} - link not yet available`}
+                aria-label={`${name} - link not yet available`}
                 className="grid h-10 w-10 place-items-center rounded-lg border border-border text-muted-foreground"
               >
                 <Icon className="h-4 w-4" />

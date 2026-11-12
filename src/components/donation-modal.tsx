@@ -47,7 +47,9 @@ export function DonationModal({ logo }: { logo: string }) {
     const r = donationSchema.safeParse({
       ...fields,
       amount: Number.isFinite(amount) && amount > 0 ? amount : NaN,
-      consent, anonymous, frequency,
+      consent,
+      anonymous,
+      frequency,
     });
     if (!r.success) {
       const errs: Record<string, string> = {};
@@ -58,7 +60,14 @@ export function DonationModal({ logo }: { logo: string }) {
     }
     setErrors({});
     setBusy(true);
-    try { const result = await checkout({ data: r.data }); window.location.href = result.url; } catch (error) { setErrors({ payment: error instanceof Error ? error.message : "Could not open payment" }); setNotice(true); setBusy(false); }
+    try {
+      const result = await checkout({ data: r.data });
+      window.location.href = result.url;
+    } catch (error) {
+      setErrors({ payment: error instanceof Error ? error.message : "Could not open payment" });
+      setNotice(true);
+      setBusy(false);
+    }
   };
 
   const err = (k: string) =>
@@ -92,7 +101,7 @@ export function DonationModal({ logo }: { logo: string }) {
                 aria-pressed={frequency === f}
                 className={cn(
                   "rounded-lg py-2 text-sm font-semibold transition-all",
-                  frequency === f ? "bg-background shadow-sm" : "text-muted-foreground",
+                  frequency === f ? "text-white shadow-sm" : "text-white",
                 )}
               >
                 {f === "once" ? "One-time" : "Monthly"}
@@ -109,7 +118,7 @@ export function DonationModal({ logo }: { logo: string }) {
                   type="button"
                   aria-pressed={preset === a}
                   onClick={() => setPreset(a)}
-                  className={pill(preset === a)}
+                  className={`${pill(preset === a)} text-black`}
                 >
                   ${a}
                 </Button>
@@ -203,7 +212,8 @@ export function DonationModal({ logo }: { logo: string }) {
           </div>
 
           <Button
-            type="submit" disabled={busy}
+            type="submit"
+            disabled={busy}
             className="flex w-full items-center justify-center gap-2 rounded-lg bg-red-gradient py-4 text-base font-bold text-primary-foreground shadow-glow transition-all hover:brightness-110"
           >
             <HandHeart className="h-5 w-5" />
@@ -211,16 +221,19 @@ export function DonationModal({ logo }: { logo: string }) {
             {frequency === "monthly" ? " monthly" : ""}
           </Button>
 
-          {frequency === "monthly" && <p className="text-xs text-muted-foreground">Your selected amount is charged every month until cancelled. Keep your Stripe confirmation to manage your donation.</p>}
+          {frequency === "monthly" && (
+            <p className="text-xs text-muted-foreground">
+              Your selected amount is charged every month until cancelled. Keep your Stripe
+              confirmation to manage your donation.
+            </p>
+          )}
           {notice && (
             <div
               role="status"
               className="flex gap-3 rounded-lg border border-primary/40 bg-primary/10 p-4 text-sm animate-in fade-in"
             >
               <Info className="h-5 w-5 shrink-0 text-primary" />
-              <p>
-                {errors["payment"]} No payment has been taken by this form.
-              </p>
+              <p>{errors["payment"]} No payment has been taken by this form.</p>
             </div>
           )}
           <p className="flex items-center justify-center gap-1.5 text-xs text-muted-foreground">

@@ -106,7 +106,11 @@ function RootShell({ children }: { children: ReactNode }) {
     <html lang="en" data-theme="light" suppressHydrationWarning>
       <head>
         <HeadContent />
-        <script dangerouslySetInnerHTML={{ __html: `try{document.documentElement.dataset.theme=localStorage.getItem('vor-theme')==='dark'?'dark':'light'}catch{}` }} />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `try{document.documentElement.dataset.theme=localStorage.getItem('vor-theme')==='dark'?'dark':'light'}catch{}`,
+          }}
+        />
       </head>
       <body className="font-sans antialiased">
         {children}

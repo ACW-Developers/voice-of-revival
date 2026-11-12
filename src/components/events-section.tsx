@@ -13,11 +13,18 @@ type Ev = Tables<"events">;
 export const formatPrice = (cents: number, cur: string) =>
   cents <= 0
     ? "Free"
-    : new Intl.NumberFormat("en-US", { style: "currency", currency: cur.toUpperCase() }).format(cents / 100);
+    : new Intl.NumberFormat("en-US", { style: "currency", currency: cur.toUpperCase() }).format(
+        cents / 100,
+      );
 
 export const formatDate = (iso: string) =>
   new Date(iso).toLocaleString("en-GB", {
-    weekday: "short", day: "numeric", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit",
+    weekday: "short",
+    day: "numeric",
+    month: "short",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
   });
 
 function EventCard({ ev, poster }: { ev: Ev; poster: string }) {
@@ -31,7 +38,9 @@ function EventCard({ ev, poster }: { ev: Ev; poster: string }) {
   async function buy() {
     setBusy(true);
     try {
-      const { url } = await checkout({ data: { eventId: ev.id, quantity: qty, origin: window.location.origin } });
+      const { url } = await checkout({
+        data: { eventId: ev.id, quantity: qty, origin: window.location.origin },
+      });
       window.location.href = url;
     } catch (e) {
       toast.error(e instanceof Error ? e.message : "Could not start checkout");
@@ -46,29 +55,57 @@ function EventCard({ ev, poster }: { ev: Ev; poster: string }) {
         <span className="pointer-events-none absolute left-3 top-3 rounded-md bg-background/85 px-3 py-1 text-xs font-bold uppercase tracking-widest backdrop-blur">
           {formatPrice(ev.price_cents, ev.currency)}
         </span>
-        <span className={`pointer-events-none absolute right-3 top-3 rounded-md px-3 py-1 text-xs font-bold uppercase tracking-widest ${soldOut ? "bg-destructive text-destructive-foreground" : "bg-primary text-primary-foreground"}`}>
+        <span
+          className={`pointer-events-none absolute right-3 top-3 rounded-md px-3 py-1 text-xs font-bold uppercase tracking-widest ${soldOut ? "bg-destructive text-destructive-foreground" : "bg-primary text-primary-foreground"}`}
+        >
           {soldOut ? "Sold out" : `${left} left`}
         </span>
       </div>
       <div className="flex flex-1 flex-col p-6">
         <h3 className="font-display text-2xl uppercase leading-tight">{ev.title}</h3>
-        <p className="mt-3 flex items-center gap-2 text-sm text-muted-foreground"><Calendar className="h-4 w-4 text-primary" />{formatDate(ev.starts_at)}</p>
-        <p className="mt-1 flex items-center gap-2 text-sm text-muted-foreground"><MapPin className="h-4 w-4 text-primary" />{ev.venue}</p>
+        <p className="mt-3 flex items-center gap-2 text-sm text-muted-foreground">
+          <Calendar className="h-4 w-4 text-primary" />
+          {formatDate(ev.starts_at)}
+        </p>
+        <p className="mt-1 flex items-center gap-2 text-sm text-muted-foreground">
+          <MapPin className="h-4 w-4 text-primary" />
+          {ev.venue}
+        </p>
         <p className="mt-4 line-clamp-4 flex-1 text-sm text-muted-foreground">{ev.description}</p>
         {!free && !soldOut && (
           <div className="mt-6 flex items-center gap-3">
             <div className="flex items-center rounded-md border border-border">
-              <button aria-label="Fewer tickets" className="p-2.5 hover:text-primary" onClick={() => setQty(Math.max(1, qty - 1))}><Minus className="h-4 w-4" /></button>
+              <button
+                aria-label="Fewer tickets"
+                className="p-2.5 hover:text-primary"
+                onClick={() => setQty(Math.max(1, qty - 1))}
+              >
+                <Minus className="h-4 w-4" />
+              </button>
               <span className="w-8 text-center font-bold">{qty}</span>
-              <button aria-label="More tickets" className="p-2.5 hover:text-primary" onClick={() => setQty(Math.min(10, left, qty + 1))}><Plus className="h-4 w-4" /></button>
+              <button
+                aria-label="More tickets"
+                className="p-2.5 hover:text-primary"
+                onClick={() => setQty(Math.min(10, left, qty + 1))}
+              >
+                <Plus className="h-4 w-4" />
+              </button>
             </div>
-            <button onClick={buy} disabled={busy}
-              className="inline-flex min-h-11 flex-1 items-center justify-center gap-2 rounded-lg bg-red-gradient px-5 text-sm font-bold uppercase tracking-widest text-primary-foreground shadow-glow transition hover:brightness-110 disabled:opacity-60">
-              {busy ? <Loader2 className="h-4 w-4 animate-spin" /> : <Ticket className="h-4 w-4" />} Get Tickets
+            <button
+              onClick={buy}
+              disabled={busy}
+              className="inline-flex min-h-11 flex-1 items-center justify-center gap-2 rounded-lg bg-red-gradient px-5 text-sm font-bold uppercase tracking-widest text-primary-foreground shadow-glow transition hover:brightness-110 disabled:opacity-60"
+            >
+              {busy ? <Loader2 className="h-4 w-4 animate-spin" /> : <Ticket className="h-4 w-4" />}{" "}
+              Get Tickets
             </button>
           </div>
         )}
-        {free && <p className="mt-6 text-sm font-bold uppercase tracking-widest text-primary">Free entry — all welcome</p>}
+        {free && (
+          <p className="mt-6 text-sm font-bold uppercase tracking-widest text-primary">
+            Free entry - all welcome
+          </p>
+        )}
       </div>
     </article>
   );
@@ -78,7 +115,11 @@ export function EventsSection({ poster, heading }: { poster: string; heading: Re
   const { data, isLoading } = useQuery({
     queryKey: ["public-events"],
     queryFn: async () => {
-      const { data, error } = await supabase.from("events").select("*").eq("published", true).order("starts_at");
+      const { data, error } = await supabase
+        .from("events")
+        .select("*")
+        .eq("published", true)
+        .order("starts_at");
       if (error) throw error;
       return data;
     },
@@ -88,16 +129,23 @@ export function EventsSection({ poster, heading }: { poster: string; heading: Re
       <div className="mx-auto max-w-7xl px-5">
         {heading}
         {isLoading ? (
-          <div className="mt-14 flex justify-center"><Loader2 className="h-8 w-8 animate-spin text-primary" /></div>
+          <div className="mt-14 flex justify-center">
+            <Loader2 className="h-8 w-8 animate-spin text-primary" />
+          </div>
         ) : data && data.length > 0 ? (
           <div className="mt-14 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
-            {data.map((ev) => <EventCard key={ev.id} ev={ev} poster={poster} />)}
+            {data.map((ev) => (
+              <EventCard key={ev.id} ev={ev} poster={poster} />
+            ))}
           </div>
         ) : (
           <div className="mx-auto mt-14 max-w-2xl rounded-lg border border-dashed border-primary/50 p-6 text-center sm:p-10">
             <Calendar className="mx-auto h-10 w-10 text-primary" />
             <h3 className="mt-5 font-display text-3xl uppercase">New Gatherings Coming Soon</h3>
-            <p className="mt-3 text-muted-foreground">Our next worship experiences are being prepared. Stay connected and be the first to hear when dates are announced.</p>
+            <p className="mt-3 text-muted-foreground">
+              Our next worship experiences are being prepared. Stay connected and be the first to
+              hear when dates are announced.
+            </p>
           </div>
         )}
       </div>

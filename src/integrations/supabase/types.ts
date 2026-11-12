@@ -1,394 +1,382 @@
-export type Json =
-  | string
-  | number
-  | boolean
-  | null
-  | { [key: string]: Json | undefined }
-  | Json[]
+export type Json = string | number | boolean | null | { [key: string]: Json | undefined } | Json[];
 
 export type Database = {
   // Allows to automatically instantiate createClient with right options
   // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
   __InternalSupabase: {
-    PostgrestVersion: "14.18"
-  }
+    PostgrestVersion: "14.18";
+  };
   public: {
     Tables: {
       contact_messages: {
         Row: {
-          created_at: string
-          email: string
-          id: string
-          message: string
-          name: string
-          subject: string
-        }
+          created_at: string;
+          email: string;
+          id: string;
+          message: string;
+          name: string;
+          subject: string;
+        };
         Insert: {
-          created_at?: string
-          email: string
-          id?: string
-          message: string
-          name: string
-          subject: string
-        }
+          created_at?: string;
+          email: string;
+          id?: string;
+          message: string;
+          name: string;
+          subject: string;
+        };
         Update: {
-          created_at?: string
-          email?: string
-          id?: string
-          message?: string
-          name?: string
-          subject?: string
-        }
-        Relationships: []
-      }
+          created_at?: string;
+          email?: string;
+          id?: string;
+          message?: string;
+          name?: string;
+          subject?: string;
+        };
+        Relationships: [];
+      };
       donation_orders: {
         Row: {
-          amount_cents: number
-          anonymous: boolean
-          created_at: string
-          email: string
-          frequency: string
-          id: string
-          message: string
-          name: string
-          phone: string
-          stripe_session_id: string | null
-          subscription_id: string | null
-        }
+          amount_cents: number;
+          anonymous: boolean;
+          created_at: string;
+          email: string;
+          frequency: string;
+          id: string;
+          message: string;
+          name: string;
+          phone: string;
+          stripe_session_id: string | null;
+          subscription_id: string | null;
+        };
         Insert: {
-          amount_cents: number
-          anonymous?: boolean
-          created_at?: string
-          email: string
-          frequency: string
-          id?: string
-          message?: string
-          name?: string
-          phone?: string
-          stripe_session_id?: string | null
-          subscription_id?: string | null
-        }
+          amount_cents: number;
+          anonymous?: boolean;
+          created_at?: string;
+          email: string;
+          frequency: string;
+          id?: string;
+          message?: string;
+          name?: string;
+          phone?: string;
+          stripe_session_id?: string | null;
+          subscription_id?: string | null;
+        };
         Update: {
-          amount_cents?: number
-          anonymous?: boolean
-          created_at?: string
-          email?: string
-          frequency?: string
-          id?: string
-          message?: string
-          name?: string
-          phone?: string
-          stripe_session_id?: string | null
-          subscription_id?: string | null
-        }
-        Relationships: []
-      }
+          amount_cents?: number;
+          anonymous?: boolean;
+          created_at?: string;
+          email?: string;
+          frequency?: string;
+          id?: string;
+          message?: string;
+          name?: string;
+          phone?: string;
+          stripe_session_id?: string | null;
+          subscription_id?: string | null;
+        };
+        Relationships: [];
+      };
       donations: {
         Row: {
-          amount_cents: number
-          created_at: string
-          currency: string
-          id: string
-          order_id: string
-          paid_at: string
-          payment_id: string
-        }
+          amount_cents: number;
+          created_at: string;
+          currency: string;
+          id: string;
+          order_id: string;
+          paid_at: string;
+          payment_id: string;
+        };
         Insert: {
-          amount_cents: number
-          created_at?: string
-          currency: string
-          id?: string
-          order_id: string
-          paid_at: string
-          payment_id: string
-        }
+          amount_cents: number;
+          created_at?: string;
+          currency: string;
+          id?: string;
+          order_id: string;
+          paid_at: string;
+          payment_id: string;
+        };
         Update: {
-          amount_cents?: number
-          created_at?: string
-          currency?: string
-          id?: string
-          order_id?: string
-          paid_at?: string
-          payment_id?: string
-        }
+          amount_cents?: number;
+          created_at?: string;
+          currency?: string;
+          id?: string;
+          order_id?: string;
+          paid_at?: string;
+          payment_id?: string;
+        };
         Relationships: [
           {
-            foreignKeyName: "donations_order_id_fkey"
-            columns: ["order_id"]
-            isOneToOne: false
-            referencedRelation: "donation_orders"
-            referencedColumns: ["id"]
+            foreignKeyName: "donations_order_id_fkey";
+            columns: ["order_id"];
+            isOneToOne: false;
+            referencedRelation: "donation_orders";
+            referencedColumns: ["id"];
           },
-        ]
-      }
+        ];
+      };
       events: {
         Row: {
-          capacity: number
-          created_at: string
-          currency: string
-          description: string
-          id: string
-          poster_url: string | null
-          price_cents: number
-          published: boolean
-          starts_at: string
-          tickets_sold: number
-          title: string
-          updated_at: string
-          venue: string
-        }
+          capacity: number;
+          created_at: string;
+          currency: string;
+          description: string;
+          id: string;
+          poster_url: string | null;
+          price_cents: number;
+          published: boolean;
+          starts_at: string;
+          tickets_sold: number;
+          title: string;
+          updated_at: string;
+          venue: string;
+        };
         Insert: {
-          capacity?: number
-          created_at?: string
-          currency?: string
-          description?: string
-          id?: string
-          poster_url?: string | null
-          price_cents?: number
-          published?: boolean
-          starts_at: string
-          tickets_sold?: number
-          title: string
-          updated_at?: string
-          venue?: string
-        }
+          capacity?: number;
+          created_at?: string;
+          currency?: string;
+          description?: string;
+          id?: string;
+          poster_url?: string | null;
+          price_cents?: number;
+          published?: boolean;
+          starts_at: string;
+          tickets_sold?: number;
+          title: string;
+          updated_at?: string;
+          venue?: string;
+        };
         Update: {
-          capacity?: number
-          created_at?: string
-          currency?: string
-          description?: string
-          id?: string
-          poster_url?: string | null
-          price_cents?: number
-          published?: boolean
-          starts_at?: string
-          tickets_sold?: number
-          title?: string
-          updated_at?: string
-          venue?: string
-        }
-        Relationships: []
-      }
+          capacity?: number;
+          created_at?: string;
+          currency?: string;
+          description?: string;
+          id?: string;
+          poster_url?: string | null;
+          price_cents?: number;
+          published?: boolean;
+          starts_at?: string;
+          tickets_sold?: number;
+          title?: string;
+          updated_at?: string;
+          venue?: string;
+        };
+        Relationships: [];
+      };
       tickets: {
         Row: {
-          amount_cents: number
-          buyer_email: string | null
-          buyer_name: string | null
-          created_at: string
-          currency: string
-          event_id: string
-          id: string
-          quantity: number
-          stripe_session_id: string
-          ticket_code: string
-        }
+          amount_cents: number;
+          buyer_email: string | null;
+          buyer_name: string | null;
+          created_at: string;
+          currency: string;
+          event_id: string;
+          id: string;
+          quantity: number;
+          stripe_session_id: string;
+          ticket_code: string;
+        };
         Insert: {
-          amount_cents: number
-          buyer_email?: string | null
-          buyer_name?: string | null
-          created_at?: string
-          currency: string
-          event_id: string
-          id?: string
-          quantity: number
-          stripe_session_id: string
-          ticket_code?: string
-        }
+          amount_cents: number;
+          buyer_email?: string | null;
+          buyer_name?: string | null;
+          created_at?: string;
+          currency: string;
+          event_id: string;
+          id?: string;
+          quantity: number;
+          stripe_session_id: string;
+          ticket_code?: string;
+        };
         Update: {
-          amount_cents?: number
-          buyer_email?: string | null
-          buyer_name?: string | null
-          created_at?: string
-          currency?: string
-          event_id?: string
-          id?: string
-          quantity?: number
-          stripe_session_id?: string
-          ticket_code?: string
-        }
+          amount_cents?: number;
+          buyer_email?: string | null;
+          buyer_name?: string | null;
+          created_at?: string;
+          currency?: string;
+          event_id?: string;
+          id?: string;
+          quantity?: number;
+          stripe_session_id?: string;
+          ticket_code?: string;
+        };
         Relationships: [
           {
-            foreignKeyName: "tickets_event_id_fkey"
-            columns: ["event_id"]
-            isOneToOne: false
-            referencedRelation: "events"
-            referencedColumns: ["id"]
+            foreignKeyName: "tickets_event_id_fkey";
+            columns: ["event_id"];
+            isOneToOne: false;
+            referencedRelation: "events";
+            referencedColumns: ["id"];
           },
-        ]
-      }
+        ];
+      };
       user_roles: {
         Row: {
-          id: string
-          role: Database["public"]["Enums"]["app_role"]
-          user_id: string
-        }
+          id: string;
+          role: Database["public"]["Enums"]["app_role"];
+          user_id: string;
+        };
         Insert: {
-          id?: string
-          role: Database["public"]["Enums"]["app_role"]
-          user_id: string
-        }
+          id?: string;
+          role: Database["public"]["Enums"]["app_role"];
+          user_id: string;
+        };
         Update: {
-          id?: string
-          role?: Database["public"]["Enums"]["app_role"]
-          user_id?: string
-        }
-        Relationships: []
-      }
-    }
+          id?: string;
+          role?: Database["public"]["Enums"]["app_role"];
+          user_id?: string;
+        };
+        Relationships: [];
+      };
+    };
     Views: {
-      [_ in never]: never
-    }
+      [_ in never]: never;
+    };
     Functions: {
       has_role: {
         Args: {
-          _role: Database["public"]["Enums"]["app_role"]
-          _user_id: string
-        }
-        Returns: boolean
-      }
+          _role: Database["public"]["Enums"]["app_role"];
+          _user_id: string;
+        };
+        Returns: boolean;
+      };
       manage_donation: {
-        Args: { p_action: string; p_data: Json; p_secret: string }
-        Returns: Json
-      }
+        Args: { p_action: string; p_data: Json; p_secret: string };
+        Returns: Json;
+      };
       record_ticket: {
         Args: {
-          p_amount: number
-          p_currency: string
-          p_email: string
-          p_event_id: string
-          p_name: string
-          p_quantity: number
-          p_secret: string
-          p_session_id: string
-        }
-        Returns: Json
-      }
-    }
+          p_amount: number;
+          p_currency: string;
+          p_email: string;
+          p_event_id: string;
+          p_name: string;
+          p_quantity: number;
+          p_secret: string;
+          p_session_id: string;
+        };
+        Returns: Json;
+      };
+    };
     Enums: {
-      app_role: "admin" | "user"
-    }
+      app_role: "admin" | "user";
+    };
     CompositeTypes: {
-      [_ in never]: never
-    }
-  }
-}
+      [_ in never]: never;
+    };
+  };
+};
 
-type DatabaseWithoutInternals = Omit<Database, "__InternalSupabase">
+type DatabaseWithoutInternals = Omit<Database, "__InternalSupabase">;
 
-type DefaultSchema = DatabaseWithoutInternals[Extract<keyof Database, "public">]
+type DefaultSchema = DatabaseWithoutInternals[Extract<keyof Database, "public">];
 
 export type Tables<
   DefaultSchemaTableNameOrOptions extends
     | keyof (DefaultSchema["Tables"] & DefaultSchema["Views"])
     | { schema: keyof DatabaseWithoutInternals },
   TableName extends (DefaultSchemaTableNameOrOptions extends {
-    schema: keyof DatabaseWithoutInternals
+    schema: keyof DatabaseWithoutInternals;
   }
     ? keyof (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
         DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Views"])
     : never) = never,
 > = DefaultSchemaTableNameOrOptions extends {
-  schema: keyof DatabaseWithoutInternals
+  schema: keyof DatabaseWithoutInternals;
 }
   ? (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
       DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Views"])[TableName] extends {
-      Row: infer R
+      Row: infer R;
     }
     ? R
     : never
-  : DefaultSchemaTableNameOrOptions extends keyof (DefaultSchema["Tables"] &
-        DefaultSchema["Views"])
-    ? (DefaultSchema["Tables"] &
-        DefaultSchema["Views"])[DefaultSchemaTableNameOrOptions] extends {
-        Row: infer R
+  : DefaultSchemaTableNameOrOptions extends keyof (DefaultSchema["Tables"] & DefaultSchema["Views"])
+    ? (DefaultSchema["Tables"] & DefaultSchema["Views"])[DefaultSchemaTableNameOrOptions] extends {
+        Row: infer R;
       }
       ? R
       : never
-    : never
+    : never;
 
 export type TablesInsert<
   DefaultSchemaTableNameOrOptions extends
-    | keyof DefaultSchema["Tables"]
-    | { schema: keyof DatabaseWithoutInternals },
+    keyof DefaultSchema["Tables"] | { schema: keyof DatabaseWithoutInternals },
   TableName extends (DefaultSchemaTableNameOrOptions extends {
-    schema: keyof DatabaseWithoutInternals
+    schema: keyof DatabaseWithoutInternals;
   }
     ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
     : never) = never,
 > = DefaultSchemaTableNameOrOptions extends {
-  schema: keyof DatabaseWithoutInternals
+  schema: keyof DatabaseWithoutInternals;
 }
   ? DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
-      Insert: infer I
+      Insert: infer I;
     }
     ? I
     : never
   : DefaultSchemaTableNameOrOptions extends keyof DefaultSchema["Tables"]
     ? DefaultSchema["Tables"][DefaultSchemaTableNameOrOptions] extends {
-        Insert: infer I
+        Insert: infer I;
       }
       ? I
       : never
-    : never
+    : never;
 
 export type TablesUpdate<
   DefaultSchemaTableNameOrOptions extends
-    | keyof DefaultSchema["Tables"]
-    | { schema: keyof DatabaseWithoutInternals },
+    keyof DefaultSchema["Tables"] | { schema: keyof DatabaseWithoutInternals },
   TableName extends (DefaultSchemaTableNameOrOptions extends {
-    schema: keyof DatabaseWithoutInternals
+    schema: keyof DatabaseWithoutInternals;
   }
     ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
     : never) = never,
 > = DefaultSchemaTableNameOrOptions extends {
-  schema: keyof DatabaseWithoutInternals
+  schema: keyof DatabaseWithoutInternals;
 }
   ? DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
-      Update: infer U
+      Update: infer U;
     }
     ? U
     : never
   : DefaultSchemaTableNameOrOptions extends keyof DefaultSchema["Tables"]
     ? DefaultSchema["Tables"][DefaultSchemaTableNameOrOptions] extends {
-        Update: infer U
+        Update: infer U;
       }
       ? U
       : never
-    : never
+    : never;
 
 export type Enums<
   DefaultSchemaEnumNameOrOptions extends
-    | keyof DefaultSchema["Enums"]
-    | { schema: keyof DatabaseWithoutInternals },
+    keyof DefaultSchema["Enums"] | { schema: keyof DatabaseWithoutInternals },
   EnumName extends (DefaultSchemaEnumNameOrOptions extends {
-    schema: keyof DatabaseWithoutInternals
+    schema: keyof DatabaseWithoutInternals;
   }
     ? keyof DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"]
     : never) = never,
 > = DefaultSchemaEnumNameOrOptions extends {
-  schema: keyof DatabaseWithoutInternals
+  schema: keyof DatabaseWithoutInternals;
 }
   ? DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"][EnumName]
   : DefaultSchemaEnumNameOrOptions extends keyof DefaultSchema["Enums"]
     ? DefaultSchema["Enums"][DefaultSchemaEnumNameOrOptions]
-    : never
+    : never;
 
 export type CompositeTypes<
   PublicCompositeTypeNameOrOptions extends
-    | keyof DefaultSchema["CompositeTypes"]
-    | { schema: keyof DatabaseWithoutInternals },
+    keyof DefaultSchema["CompositeTypes"] | { schema: keyof DatabaseWithoutInternals },
   CompositeTypeName extends (PublicCompositeTypeNameOrOptions extends {
-    schema: keyof DatabaseWithoutInternals
+    schema: keyof DatabaseWithoutInternals;
   }
     ? keyof DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"]
     : never) = never,
 > = PublicCompositeTypeNameOrOptions extends {
-  schema: keyof DatabaseWithoutInternals
+  schema: keyof DatabaseWithoutInternals;
 }
   ? DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"][CompositeTypeName]
   : PublicCompositeTypeNameOrOptions extends keyof DefaultSchema["CompositeTypes"]
     ? DefaultSchema["CompositeTypes"][PublicCompositeTypeNameOrOptions]
-    : never
+    : never;
 
 export const Constants = {
   public: {
@@ -396,4 +384,4 @@ export const Constants = {
       app_role: ["admin", "user"],
     },
   },
-} as const
+} as const;
