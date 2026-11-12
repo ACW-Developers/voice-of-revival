@@ -1,4 +1,4 @@
-@import "tailwindcss";
+@import "tailwindcss" source(none);
 @source "../src";
 @import "tw-animate-css";
 
@@ -314,7 +314,7 @@ html {
   background-attachment: fixed;
 }
 .hero-title {
-  font-size: 3rem;
+  font-size: 4rem;
   font-weight: 800;
   letter-spacing: 0;
 }

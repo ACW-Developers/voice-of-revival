@@ -199,9 +199,15 @@ function Hero() {
           className="animate-rise mt-7 max-w-xl text-lg text-photo-foreground/85"
           style={{ animationDelay: "0.25s" }}
         >
-          A Christ-centred worship movement bringing people together through authentic worship,
-          nurturing Christian talent, and spreading the hope of the Gospel through music,
-          fellowship, and meaningful service.
+          <span className="sm:hidden">
+            A Christ-centred worship movement uniting people through music, fellowship, and the hope
+            of the Gospel.
+          </span>
+          <span className="hidden sm:inline">
+            A Christ-centred worship movement bringing people together through authentic worship,
+            nurturing Christian talent, and spreading the hope of the Gospel through music,
+            fellowship, and meaningful service.
+          </span>
         </p>
         <div
           className="animate-rise mt-9 flex flex-col items-start gap-4 sm:flex-row"
