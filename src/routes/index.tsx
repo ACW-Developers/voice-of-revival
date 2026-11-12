@@ -182,7 +182,7 @@ function Hero() {
         >
           VOICE OF
           <br />
-          <span className="text-hero-accent">REVIVAL</span>
+          <span className="font-revival font-bold text-hero-accent">REVIVAL</span>
         </h1>
         <p
           className="animate-rise mt-7 max-w-xl text-lg text-photo-foreground/85"
@@ -385,13 +385,30 @@ const SONGS = [
   { artist: "KADOGO", song: "NI MUKOMERE", id: "TTG1fyctilg", image: mukomere.url },
 ];
 function MusicSection() {
+  const [activeVideo, setActiveVideo] = useState<string | null>(null);
   return <section id="music" className="py-24 md:py-32"><div className="mx-auto max-w-7xl px-5">
     <div className="grid gap-6 md:grid-cols-2 md:items-end"><div><p className="eyebrow">Music & Worship</p><h2 className="mt-4 font-display text-4xl uppercase md:text-6xl">The Sound of Revival</h2></div><p className="max-w-xl text-lg text-muted-foreground">Songs of faith, hope and worship from the voices behind our movement.</p></div>
     <div className="mt-12 grid gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4">
-      {SONGS.map(s => <a key={s.id} href={`https://www.youtube.com/watch?v=${s.id}`} target="_blank" rel="noopener noreferrer" aria-label={`Watch ${s.song} by ${s.artist} on YouTube`} className="group min-w-0">
-        <div className="relative aspect-video overflow-hidden rounded-lg bg-muted"><img src={s.image} alt={`${s.artist} — ${s.song}`} loading="lazy" className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"/><span className="absolute inset-0 grid place-items-center bg-photo-background/15"><span className="grid h-12 w-12 place-items-center rounded-full bg-primary text-primary-foreground shadow-glow transition-transform group-hover:scale-110"><Play className="h-5 w-5 fill-current"/></span></span></div>
+      {SONGS.map(s => <div key={s.id} className="group min-w-0">
+        <div className="relative aspect-video overflow-hidden rounded-lg bg-muted">
+          {activeVideo === s.id ? (
+            <iframe
+              src={`https://www.youtube-nocookie.com/embed/${s.id}?autoplay=1&playsinline=1&rel=0`}
+              title={`${s.artist} — ${s.song}`}
+              className="h-full w-full border-0"
+              allow="autoplay; encrypted-media; picture-in-picture; fullscreen"
+              referrerPolicy="strict-origin-when-cross-origin"
+              allowFullScreen
+            />
+          ) : (
+            <Button variant="ghost" aria-label={`Play ${s.song} by ${s.artist}`} onClick={() => setActiveVideo(s.id)} className="relative h-full w-full overflow-hidden rounded-none p-0 hover:bg-transparent">
+              <img src={s.image} alt={`${s.artist} — ${s.song}`} loading="lazy" className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"/>
+              <span className="absolute inset-0 grid place-items-center bg-photo-background/15"><span className="grid h-12 w-12 place-items-center rounded-full bg-primary text-primary-foreground shadow-glow transition-transform group-hover:scale-110"><Play className="h-5 w-5 fill-current"/></span></span>
+            </Button>
+          )}
+        </div>
         <p className="mt-5 text-xs font-bold text-primary">{s.artist}</p><h3 className="mt-1 font-display text-2xl uppercase">{s.song}</h3>
-      </a>)}
+      </div>)}
     </div>
   </div></section>;
 }
