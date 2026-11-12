@@ -320,7 +320,7 @@ html {
 }
 @media (min-width: 768px) {
   .hero-title {
-    font-size: 6.5rem;
+    font-size: 5.5rem;
   }
 }
 @media (max-width: 420px) {
