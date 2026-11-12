@@ -3,11 +3,11 @@ import { Moon, Sun } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 export function ThemeToggle() {
-  const [light, setLight] = useState(false);
+  const [light, setLight] = useState(true);
   useEffect(() => {
-    let selected = "dark";
+    let selected = "light";
     try {
-      selected = localStorage.getItem("vor-theme") ?? "dark";
+      selected = localStorage.getItem("vor-theme") ?? "light";
     } catch {
       /* Storage may be unavailable. */
     }
