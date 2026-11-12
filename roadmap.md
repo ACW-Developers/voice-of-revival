@@ -1,5 +1,6 @@
 # Website visual upgrades
 
+- [x] Refine REVIVAL typography, freeze the hero background without altering foreground motion, and verify inline YouTube players.
 - [x] Refine hero, navbar, light default, music showcase, support background and poster lightbox.
 - [x] Integrate Stripe donations and administrator donation history and ticket analytics (one-time sandbox payment verified; monthly renewal not time-tested).
 - [x] Open prepared contact enquiries in WhatsApp and verify key desktop/mobile flows.

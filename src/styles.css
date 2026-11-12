@@ -140,6 +140,7 @@
 
 @theme inline {
   --font-hero: "Montserrat", sans-serif;
+  --font-revival: "Cinzel", Georgia, serif;
   --font-display: "Anton", "Impact", sans-serif;
   --font-sans: "Manrope", system-ui, sans-serif;
 }
@@ -202,6 +203,16 @@ html {
 }
 .theme-toggle-thumb.is-light {
   transform: translateX(-32px);
+}
+.hero-static-background {
+  clip-path: inset(0);
+}
+.hero-static-image {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: min(850px, 92svh);
+  object-fit: cover;
 }
 .hero-frame {
   position: absolute;
