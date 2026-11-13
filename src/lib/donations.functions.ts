@@ -33,7 +33,7 @@ export const createDonationCheckout = createServerFn({ method: "POST" })
       cancel_url: `${origin}/?donation=cancelled#support`,
       "metadata[donation_order_id]": order.id,
       "line_items[0][quantity]": "1",
-      "line_items[0][price_data][product]": "prod_Vc7M1KdRte7fwe",
+      "line_items[0][price_data][product]": "prod_Vch8SIn65YtDkW",
       "line_items[0][price_data][currency]": "usd",
       "line_items[0][price_data][unit_amount]": String(order.amount_cents),
       "adaptive_pricing[enabled]": "false",
