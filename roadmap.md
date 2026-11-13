@@ -1,6 +1,6 @@
 # Website visual upgrades
 
-- [ ] Enable and verify live donation and ticket Checkout without submitting a charge.
+- [x] Enable live donation and ticket Checkout; verified $20 one-time, $20 monthly, and $30 ticket live sessions without charging. Real payment receipt and monthly renewal remain untested.
 
 - [x] Refine REVIVAL typography, freeze the hero background without altering foreground motion, and verify inline YouTube players.
 - [x] Refine hero, navbar, light default, music showcase, support background and poster lightbox.

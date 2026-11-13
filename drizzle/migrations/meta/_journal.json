@@ -29,6 +29,13 @@
       "when": 1794471087736,
       "tag": "0003_donation_tracking",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1794604313242,
+      "tag": "0004_secure_live_payment_recording",
+      "breakpoints": true
     }
   ]
 }

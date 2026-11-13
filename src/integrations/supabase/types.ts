@@ -169,6 +169,21 @@ export type Database = {
         }
         Relationships: []
       }
+      payment_recording_config: {
+        Row: {
+          id: boolean
+          secret_digest: string
+        }
+        Insert: {
+          id?: boolean
+          secret_digest: string
+        }
+        Update: {
+          id?: boolean
+          secret_digest?: string
+        }
+        Relationships: []
+      }
       tickets: {
         Row: {
           amount_cents: number
@@ -239,6 +254,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      configure_payment_recording: {
+        Args: { p_secret: string }
+        Returns: undefined
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
@@ -249,6 +268,10 @@ export type Database = {
       manage_donation: {
         Args: { p_action: string; p_data: Json; p_secret: string }
         Returns: Json
+      }
+      payment_recording_authorized: {
+        Args: { p_secret: string }
+        Returns: boolean
       }
       record_ticket: {
         Args: {

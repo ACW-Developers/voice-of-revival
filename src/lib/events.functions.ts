@@ -2,6 +2,7 @@ import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { createClient } from "@supabase/supabase-js";
 import type { Database } from "@/integrations/supabase/types";
+import { requireLivePayment } from "./payment-mode";
 
 export function publicDb() {
   const key = process.env["SUPABASE_PUBLISHABLE_KEY"];
@@ -75,16 +76,16 @@ export const createTicketCheckout = createServerFn({ method: "POST" })
       "metadata[event_id]": ev.id,
       "metadata[quantity]": String(data.quantity),
     });
-    const session = await stripe("checkout/sessions", { method: "POST", body });
+    const session = requireLivePayment(await stripe("checkout/sessions", { method: "POST", body }));
     return { url: session.url as string };
   });
 
 export const confirmTicket = createServerFn({ method: "POST" })
   .inputValidator((d) => z.object({ sessionId: z.string().min(10).max(255) }).parse(d))
   .handler(async ({ data }) => {
-    const s = await stripe(`checkout/sessions/${encodeURIComponent(data.sessionId)}`);
+    const s = requireLivePayment(await stripe(`checkout/sessions/${encodeURIComponent(data.sessionId)}`));
     if (s.payment_status !== "paid") return { paid: false as const };
-    const secret = process.env["TICKET_SECRET"];
+    const secret = process.env["PAYMENT_RECORDING_SECRET"];
     if (!secret) throw new Error("Ticketing is not configured yet.");
     const { data: r, error } = await publicDb().rpc("record_ticket", {
       p_secret: secret,

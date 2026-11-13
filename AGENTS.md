@@ -18,3 +18,4 @@
 - Ticket checkout calls Stripe's REST API with fetch from src/lib/events.functions.ts (no SDK); tickets are recorded idempotently on the success page by session id, so no webhook is required.
 - Donation checkout uses a shared Stripe product with amount-specific prices; secret-verified database RPCs store orders and idempotent paid receipts without a service role key. Confirm return-page payments and reconcile paid recurring invoices on authorized administrator refreshes; totals never count pending promises.
 - Shared giving validation and ticket aggregation live in a client-safe module; poster enlargement uses a reusable accessible dialog.
+- Donation and ticket checkouts and confirmations require Stripe livemode; shared receipt RPCs use PAYMENT_RECORDING_SECRET verified against a protected database digest, configured only by an authenticated admin, to invalidate previously exposed credentials.

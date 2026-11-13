@@ -4,9 +4,10 @@ import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import { donationSchema } from "./giving";
 import { publicDb, stripe } from "./events.functions";
+import { requireLivePayment } from "./payment-mode";
 
 async function record(action: string, data: Record<string, unknown>) {
-  const secret = process.env["TICKET_SECRET"];
+  const secret = process.env["PAYMENT_RECORDING_SECRET"];
   if (!secret) throw new Error("Donations are not configured yet.");
   const { data: result, error } = await publicDb().rpc("manage_donation", {
     p_secret: secret,
@@ -42,7 +43,7 @@ export const createDonationCheckout = createServerFn({ method: "POST" })
       body.set("line_items[0][price_data][recurring][interval]", "month");
       body.set("subscription_data[metadata][donation_order_id]", order.id);
     }
-    const session = await stripe("checkout/sessions", { method: "POST", body });
+    const session = requireLivePayment(await stripe("checkout/sessions", { method: "POST", body }));
     await record("attach", { order_id: order.id, session_id: session.id });
     return { url: z.string().url().parse(session.url) };
   });
@@ -59,7 +60,7 @@ export const confirmDonation = createServerFn({ method: "POST" })
       .parse(d),
   )
   .handler(async ({ data }) => {
-    const s = await stripe(`checkout/sessions/${encodeURIComponent(data.sessionId)}`);
+    const s = requireLivePayment(await stripe(`checkout/sessions/${encodeURIComponent(data.sessionId)}`));
     if (s.payment_status !== "paid" || !s.metadata?.donation_order_id)
       return { paid: false as const };
     const invoice = s.invoice ? await stripe(`invoices/${encodeURIComponent(s.invoice)}`) : null;
@@ -96,10 +97,11 @@ export const syncDonations = createServerFn({ method: "POST" })
       if (data.length < 1000) break;
     }
     for (const order of orders ?? []) {
-      if (!order.stripe_session_id) continue;
+      if (!order.stripe_session_id || order.stripe_session_id.startsWith("cs_test_")) continue;
       const session = await stripe(
         `checkout/sessions/${encodeURIComponent(order.stripe_session_id)}`,
       );
+      requireLivePayment(session);
       if (session.payment_status !== "paid") continue;
       const sub = session.subscription ?? order.subscription_id;
       if (!sub) {
