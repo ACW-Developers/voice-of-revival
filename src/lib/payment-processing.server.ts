@@ -34,9 +34,9 @@ export async function confirmPaidSession(sessionId: string, kind: "ticket" | "do
 export async function processStripeEvent(event: { type:string; data:{object:Record<string, any>} }) {
   const object = requireLivePayment(event.data.object);
   if (["checkout.session.completed","checkout.session.async_payment_succeeded"].includes(event.type)) {
-    await confirmPaidSession(object.id, object.metadata?.donation_order_id ? "donation" : "ticket");
+    await confirmPaidSession(object['id'], object['metadata']?.donation_order_id ? "donation" : "ticket");
   } else if (event.type === "invoice.paid") {
-    const invoice = requireLivePayment(await stripe(`invoices/${encodeURIComponent(object.id)}`));
+    const invoice = requireLivePayment(await stripe(`invoices/${encodeURIComponent(object['id'])}`));
     const subscriptionId = invoice.subscription ?? invoice.parent?.subscription_details?.subscription;
     if (!subscriptionId || invoice.amount_paid <= 0) return;
     const subscription = requireLivePayment(await stripe(`subscriptions/${encodeURIComponent(subscriptionId)}`));
@@ -47,13 +47,13 @@ export async function processStripeEvent(event: { type:string; data:{object:Reco
     }});
     if (error) throw new Error("Invoice recording failed");
   } else if (["charge.refunded","charge.dispute.created","charge.dispute.closed"].includes(event.type)) {
-    const charge = event.type === "charge.refunded" ? object : await stripe(`charges/${encodeURIComponent(object.charge)}`);
+    const charge = event.type === "charge.refunded" ? object : await stripe(`charges/${encodeURIComponent(object['charge'])}`);
     const params = new URLSearchParams({payment_intent:charge.payment_intent,limit:"1"});
     const sessions = await stripe(`checkout/sessions?${params}`);
     const s = sessions.data?.[0]; if (!s) return;
     let status = "disputed";
     if (event.type === "charge.refunded") status = charge.amount_refunded === charge.amount ? "refunded" : "partially_refunded";
-    if (event.type === "charge.dispute.closed") status = object.status === "won" ? "paid" : "disputed";
+    if (event.type === "charge.dispute.closed") status = object['status'] === "won" ? "paid" : "disputed";
     const {error} = await publicDb().rpc("update_payment_status",{p_secret:recordingSecret(),p_payment_id:s.metadata?.donation_order_id ? (charge.invoice ?? charge.payment_intent) : s.id,p_status:status});
     if(error) throw new Error("Payment status recording failed");
   }

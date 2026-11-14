@@ -14,6 +14,7 @@ async function allTickets() {
     const { data, error } = await supabase
       .from("tickets")
       .select("quantity,amount_cents,currency,created_at")
+      .eq("payment_status", "paid")
       .order("id")
       .range(from, from + 999);
     if (error) throw error;
@@ -47,6 +48,7 @@ export function AdminAnalytics() {
         const { data, error } = await supabase
           .from("donations")
           .select("*,donation_orders(name,email,anonymous,frequency,message)")
+          .eq("payment_status", "paid")
           .order("paid_at", { ascending: false })
           .range(from, from + 999);
         if (error) throw error;

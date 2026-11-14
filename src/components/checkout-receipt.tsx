@@ -7,7 +7,7 @@ import { confirmDonation } from "@/lib/donations.functions";
 import { getReceipt } from "@/lib/receipts.functions";
 import { PaymentReceiptView } from "./payment-receipt";
 import { Button } from "./ui/button";
-export function CheckoutReceipt({sessionId,kind}:{sessionId?:string;kind:"ticket"|"donation"}) {
+export function CheckoutReceipt({sessionId,kind}:{sessionId:string|undefined;kind:"ticket"|"donation"}) {
   const confirm=useServerFn(kind==="ticket" ? confirmTicket : confirmDonation);
   const read=useServerFn(getReceipt);
   const q=useQuery({queryKey:["paid-receipt",kind,sessionId],enabled:!!sessionId,retry:2,retryDelay:1500,queryFn:async()=>{
