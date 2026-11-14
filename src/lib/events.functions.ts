@@ -3,6 +3,7 @@ import { z } from "zod";
 import { createClient } from "@supabase/supabase-js";
 import type { Database } from "@/integrations/supabase/types";
 import { requireLivePayment } from "./payment-mode";
+import { getRequest } from "@tanstack/react-start/server";
 
 export function publicDb() {
   const key = process.env["SUPABASE_PUBLISHABLE_KEY"];
@@ -64,7 +65,7 @@ export const createTicketCheckout = createServerFn({ method: "POST" })
     if (!ev) throw new Error("Event not found.");
     if (ev.price_cents <= 0) throw new Error("This event is free - no ticket purchase needed.");
     if (ev.capacity - ev.tickets_sold < data.quantity) throw new Error("Not enough tickets left.");
-    const origin = new URL(data.origin).origin;
+    const origin = new URL(getRequest().url).origin;
     const body = new URLSearchParams({
       mode: "payment",
       success_url: `${origin}/tickets/success?session_id={CHECKOUT_SESSION_ID}`,
@@ -81,26 +82,8 @@ export const createTicketCheckout = createServerFn({ method: "POST" })
   });
 
 export const confirmTicket = createServerFn({ method: "POST" })
-  .inputValidator((d) => z.object({ sessionId: z.string().min(10).max(255) }).parse(d))
+  .inputValidator((d) => z.object({ sessionId: z.string().regex(/^cs_[a-zA-Z0-9_]+$/).max(255) }).parse(d))
   .handler(async ({ data }) => {
-    const s = requireLivePayment(await stripe(`checkout/sessions/${encodeURIComponent(data.sessionId)}`));
-    if (s.payment_status !== "paid") return { paid: false as const };
-    const secret = process.env["PAYMENT_RECORDING_SECRET"];
-    if (!secret) throw new Error("Ticketing is not configured yet.");
-    const { data: r, error } = await publicDb().rpc("record_ticket", {
-      p_secret: secret,
-      p_session_id: s.id,
-      p_event_id: s.metadata?.event_id as string,
-      p_quantity: Number(s.metadata?.quantity ?? 1),
-      p_amount: s.amount_total,
-      p_currency: s.currency,
-      p_name: s.customer_details?.name ?? null,
-      p_email: s.customer_details?.email ?? null,
-    } as never);
-    if (error || !r) throw new Error("Could not record your ticket. Please contact us.");
-    const out = r as unknown as {
-      ticket: Database["public"]["Tables"]["tickets"]["Row"];
-      event: { title: string; starts_at: string; venue: string };
-    };
-    return { paid: true as const, ticket: out.ticket, event: out.event };
+    const { confirmPaidSession } = await import("./payment-processing.server");
+    return confirmPaidSession(data.sessionId, "ticket");
   });
