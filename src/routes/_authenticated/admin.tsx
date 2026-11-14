@@ -11,6 +11,8 @@ import logo from "@/assets/vor_logo.png";
 import { AdminAnalytics } from "@/components/admin-analytics";
 import { PosterLightbox } from "@/components/poster-lightbox";
 import { ThemeToggle } from "@/components/theme-toggle";
+import { AdminReceipts } from "@/components/admin-receipts";
+import { TicketScanner } from "@/components/ticket-scanner";
 
 export const Route = createFileRoute("/_authenticated/admin")({
   head: () => ({
@@ -191,6 +193,8 @@ function Admin() {
             </div>
 
             <AdminAnalytics />
+            <TicketScanner />
+            <AdminReceipts />
             <div className="mt-8 grid gap-4">
               {events.data?.length === 0 && (
                 <p className="rounded-lg border border-dashed border-border p-8 text-center text-muted-foreground">

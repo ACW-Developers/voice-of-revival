@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import {
@@ -18,6 +18,7 @@ import {
   Instagram,
   Youtube,
   ArrowUpRight,
+  LogIn,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/theme-toggle";
@@ -128,6 +129,9 @@ function Nav() {
         </ul>
         <div className="flex items-center gap-3">
           <ThemeToggle />
+          <Button asChild variant="ghost" size="icon" title="Sign in" aria-label="Sign in">
+            <Link to="/auth"><LogIn /></Link>
+          </Button>
           <div className="hidden sm:block">
             <Button onClick={openDonation} className={`${btnPrimary} px-5 py-2.5`}>
               Support Us
