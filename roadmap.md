@@ -1,5 +1,10 @@
 # Website visual upgrades
 
+- [ ] Add durable paid receipts, private QR access and downloadable user/admin copies.
+- [ ] Add authenticated event-day scanning with atomic duplicate-entry prevention.
+- [ ] Finalize live payment recovery and signed Stripe webhook delivery; verify existing paid records end-to-end.
+- [ ] Add navbar login icon without changing hero animations.
+
 - [x] Enable live donation and ticket Checkout; verified $20 one-time, $20 monthly, and $30 ticket live sessions without charging. Real payment receipt and monthly renewal remain untested.
 
 - [x] Refine REVIVAL typography, freeze the hero background without altering foreground motion, and verify inline YouTube players.
