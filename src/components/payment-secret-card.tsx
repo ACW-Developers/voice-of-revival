@@ -14,7 +14,7 @@ export function PaymentSecretCard() {
     const value = Array.from(bytes, (b) => b.toString(16).padStart(2, "0")).join("");
     const { error } = await supabase.rpc("configure_payment_recording", { p_secret: value });
     setBusy(false);
-    if (error) return toast.error(error.message);
+    if (error) { toast.error(error.message); return; }
     setSecret(value);
     toast.success("New payment key saved");
   }
