@@ -92,6 +92,7 @@ export type Database = {
           order_id: string
           paid_at: string
           payment_id: string
+          payment_status: string
         }
         Insert: {
           amount_cents: number
@@ -101,6 +102,7 @@ export type Database = {
           order_id: string
           paid_at: string
           payment_id: string
+          payment_status?: string
         }
         Update: {
           amount_cents?: number
@@ -110,6 +112,7 @@ export type Database = {
           order_id?: string
           paid_at?: string
           payment_id?: string
+          payment_status?: string
         }
         Relationships: [
           {
@@ -169,6 +172,36 @@ export type Database = {
         }
         Relationships: []
       }
+      payment_receipts: {
+        Row: {
+          access_token: string
+          created_at: string
+          details: Json
+          id: string
+          kind: string
+          source_id: string
+          status: string
+        }
+        Insert: {
+          access_token?: string
+          created_at?: string
+          details: Json
+          id?: string
+          kind: string
+          source_id: string
+          status?: string
+        }
+        Update: {
+          access_token?: string
+          created_at?: string
+          details?: Json
+          id?: string
+          kind?: string
+          source_id?: string
+          status?: string
+        }
+        Relationships: []
+      }
       payment_recording_config: {
         Row: {
           id: boolean
@@ -184,6 +217,41 @@ export type Database = {
         }
         Relationships: []
       }
+      ticket_admissions: {
+        Row: {
+          id: string
+          redeemed_at: string | null
+          redeemed_by: string | null
+          seat_number: number
+          ticket_id: string
+          token: string
+        }
+        Insert: {
+          id?: string
+          redeemed_at?: string | null
+          redeemed_by?: string | null
+          seat_number: number
+          ticket_id: string
+          token?: string
+        }
+        Update: {
+          id?: string
+          redeemed_at?: string | null
+          redeemed_by?: string | null
+          seat_number?: number
+          ticket_id?: string
+          token?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ticket_admissions_ticket_id_fkey"
+            columns: ["ticket_id"]
+            isOneToOne: false
+            referencedRelation: "tickets"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       tickets: {
         Row: {
           amount_cents: number
@@ -193,6 +261,7 @@ export type Database = {
           currency: string
           event_id: string
           id: string
+          payment_status: string
           quantity: number
           stripe_session_id: string
           ticket_code: string
@@ -205,6 +274,7 @@ export type Database = {
           currency: string
           event_id: string
           id?: string
+          payment_status?: string
           quantity: number
           stripe_session_id: string
           ticket_code?: string
@@ -217,6 +287,7 @@ export type Database = {
           currency?: string
           event_id?: string
           id?: string
+          payment_status?: string
           quantity?: number
           stripe_session_id?: string
           ticket_code?: string
@@ -258,6 +329,7 @@ export type Database = {
         Args: { p_secret: string }
         Returns: undefined
       }
+      get_payment_receipt: { Args: { p_token: string }; Returns: Json }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
@@ -273,6 +345,10 @@ export type Database = {
         Args: { p_secret: string }
         Returns: boolean
       }
+      receipt_for_payment: {
+        Args: { p_kind: string; p_payment_id: string; p_secret: string }
+        Returns: string
+      }
       record_ticket: {
         Args: {
           p_amount: number
@@ -284,6 +360,14 @@ export type Database = {
           p_secret: string
           p_session_id: string
         }
+        Returns: Json
+      }
+      update_payment_status: {
+        Args: { p_payment_id: string; p_secret: string; p_status: string }
+        Returns: undefined
+      }
+      validate_ticket_entry: {
+        Args: { p_event_id: string; p_redeem?: boolean; p_token: string }
         Returns: Json
       }
     }

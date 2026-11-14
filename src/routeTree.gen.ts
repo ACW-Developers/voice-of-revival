@@ -15,7 +15,9 @@ import { Route as AuthRouteImport } from './routes/auth'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
 import { Route as DonationsSuccessRouteImport } from './routes/donations.success'
+import { Route as ReceiptsTokenRouteImport } from './routes/receipts.$token'
 import { Route as TicketsSuccessRouteImport } from './routes/tickets.success'
+import { Route as ApiPublicStripeWebhookRouteImport } from './routes/api/public/stripe-webhook'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -46,9 +48,19 @@ const DonationsSuccessRoute = DonationsSuccessRouteImport.update({
   path: '/donations/success',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ReceiptsTokenRoute = ReceiptsTokenRouteImport.update({
+  id: '/receipts/$token',
+  path: '/receipts/$token',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const TicketsSuccessRoute = TicketsSuccessRouteImport.update({
   id: '/tickets/success',
   path: '/tickets/success',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiPublicStripeWebhookRoute = ApiPublicStripeWebhookRouteImport.update({
+  id: '/api/public/stripe-webhook',
+  path: '/api/public/stripe-webhook',
   getParentRoute: () => rootRouteImport,
 } as any)
 
@@ -58,7 +70,9 @@ export interface FileRoutesByFullPath {
   '/reset-password': typeof ResetPasswordRoute
   '/admin': typeof AuthenticatedAdminRoute
   '/donations/success': typeof DonationsSuccessRoute
+  '/receipts/$token': typeof ReceiptsTokenRoute
   '/tickets/success': typeof TicketsSuccessRoute
+  '/api/public/stripe-webhook': typeof ApiPublicStripeWebhookRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -66,7 +80,9 @@ export interface FileRoutesByTo {
   '/reset-password': typeof ResetPasswordRoute
   '/admin': typeof AuthenticatedAdminRoute
   '/donations/success': typeof DonationsSuccessRoute
+  '/receipts/$token': typeof ReceiptsTokenRoute
   '/tickets/success': typeof TicketsSuccessRoute
+  '/api/public/stripe-webhook': typeof ApiPublicStripeWebhookRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -76,7 +92,9 @@ export interface FileRoutesById {
   '/reset-password': typeof ResetPasswordRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRoute
   '/donations/success': typeof DonationsSuccessRoute
+  '/receipts/$token': typeof ReceiptsTokenRoute
   '/tickets/success': typeof TicketsSuccessRoute
+  '/api/public/stripe-webhook': typeof ApiPublicStripeWebhookRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -86,7 +104,9 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/admin'
     | '/donations/success'
+    | '/receipts/$token'
     | '/tickets/success'
+    | '/api/public/stripe-webhook'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -94,7 +114,9 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/admin'
     | '/donations/success'
+    | '/receipts/$token'
     | '/tickets/success'
+    | '/api/public/stripe-webhook'
   id:
     | '__root__'
     | '/'
@@ -103,7 +125,9 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/_authenticated/admin'
     | '/donations/success'
+    | '/receipts/$token'
     | '/tickets/success'
+    | '/api/public/stripe-webhook'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -112,7 +136,9 @@ export interface RootRouteChildren {
   AuthRoute: typeof AuthRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
   DonationsSuccessRoute: typeof DonationsSuccessRoute
+  ReceiptsTokenRoute: typeof ReceiptsTokenRoute
   TicketsSuccessRoute: typeof TicketsSuccessRoute
+  ApiPublicStripeWebhookRoute: typeof ApiPublicStripeWebhookRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -159,11 +185,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DonationsSuccessRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/receipts/$token': {
+      id: '/receipts/$token'
+      path: '/receipts/$token'
+      fullPath: '/receipts/$token'
+      preLoaderRoute: typeof ReceiptsTokenRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/tickets/success': {
       id: '/tickets/success'
       path: '/tickets/success'
       fullPath: '/tickets/success'
       preLoaderRoute: typeof TicketsSuccessRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/stripe-webhook': {
+      id: '/api/public/stripe-webhook'
+      path: '/api/public/stripe-webhook'
+      fullPath: '/api/public/stripe-webhook'
+      preLoaderRoute: typeof ApiPublicStripeWebhookRouteImport
       parentRoute: typeof rootRouteImport
     }
   }
@@ -186,7 +226,9 @@ const rootRouteChildren: RootRouteChildren = {
   AuthRoute: AuthRoute,
   ResetPasswordRoute: ResetPasswordRoute,
   DonationsSuccessRoute: DonationsSuccessRoute,
+  ReceiptsTokenRoute: ReceiptsTokenRoute,
   TicketsSuccessRoute: TicketsSuccessRoute,
+  ApiPublicStripeWebhookRoute: ApiPublicStripeWebhookRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

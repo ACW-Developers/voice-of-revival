@@ -36,6 +36,13 @@
       "when": 1794604313242,
       "tag": "0004_secure_live_payment_recording",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1794644908611,
+      "tag": "0005_paid_receipts_and_atomic_ticket_entry",
+      "breakpoints": true
     }
   ]
 }

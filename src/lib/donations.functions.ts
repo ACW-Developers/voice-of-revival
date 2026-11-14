@@ -60,20 +60,8 @@ export const confirmDonation = createServerFn({ method: "POST" })
       .parse(d),
   )
   .handler(async ({ data }) => {
-    const s = requireLivePayment(await stripe(`checkout/sessions/${encodeURIComponent(data.sessionId)}`));
-    if (s.payment_status !== "paid" || !s.metadata?.donation_order_id)
-      return { paid: false as const };
-    const invoice = s.invoice ? await stripe(`invoices/${encodeURIComponent(s.invoice)}`) : null;
-    const result = await record("paid", {
-      order_id: s.metadata.donation_order_id,
-      session_id: s.id,
-      subscription_id: s.subscription ?? undefined,
-      payment_id: invoice?.id ?? s.payment_intent,
-      amount_cents: s.amount_total,
-      currency: s.currency,
-      paid_at: invoice?.status_transitions?.paid_at ?? s.created,
-    });
-    return { paid: true as const, amount: result.amount_cents, frequency: result.frequency };
+    const { confirmPaidSession } = await import("./payment-processing.server");
+    return confirmPaidSession(data.sessionId, "donation");
   });
 
 // Reconcile paid monthly invoices on authenticated dashboard visits; never count a promised renewal as revenue.
