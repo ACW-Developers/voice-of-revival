@@ -15,6 +15,7 @@ import { Route as AuthRouteImport } from './routes/auth'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
 import { Route as DonationsSuccessRouteImport } from './routes/donations.success'
+import { Route as ReceiptsTokenRouteImport } from './routes/receipts.$token'
 import { Route as TicketsSuccessRouteImport } from './routes/tickets.success'
 
 const IndexRoute = IndexRouteImport.update({
@@ -46,6 +47,11 @@ const DonationsSuccessRoute = DonationsSuccessRouteImport.update({
   path: '/donations/success',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ReceiptsTokenRoute = ReceiptsTokenRouteImport.update({
+  id: '/receipts/$token',
+  path: '/receipts/$token',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const TicketsSuccessRoute = TicketsSuccessRouteImport.update({
   id: '/tickets/success',
   path: '/tickets/success',
@@ -58,6 +64,7 @@ export interface FileRoutesByFullPath {
   '/reset-password': typeof ResetPasswordRoute
   '/admin': typeof AuthenticatedAdminRoute
   '/donations/success': typeof DonationsSuccessRoute
+  '/receipts/$token': typeof ReceiptsTokenRoute
   '/tickets/success': typeof TicketsSuccessRoute
 }
 export interface FileRoutesByTo {
@@ -66,6 +73,7 @@ export interface FileRoutesByTo {
   '/reset-password': typeof ResetPasswordRoute
   '/admin': typeof AuthenticatedAdminRoute
   '/donations/success': typeof DonationsSuccessRoute
+  '/receipts/$token': typeof ReceiptsTokenRoute
   '/tickets/success': typeof TicketsSuccessRoute
 }
 export interface FileRoutesById {
@@ -76,6 +84,7 @@ export interface FileRoutesById {
   '/reset-password': typeof ResetPasswordRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRoute
   '/donations/success': typeof DonationsSuccessRoute
+  '/receipts/$token': typeof ReceiptsTokenRoute
   '/tickets/success': typeof TicketsSuccessRoute
 }
 export interface FileRouteTypes {
@@ -86,6 +95,7 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/admin'
     | '/donations/success'
+    | '/receipts/$token'
     | '/tickets/success'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -94,6 +104,7 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/admin'
     | '/donations/success'
+    | '/receipts/$token'
     | '/tickets/success'
   id:
     | '__root__'
@@ -103,6 +114,7 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/_authenticated/admin'
     | '/donations/success'
+    | '/receipts/$token'
     | '/tickets/success'
   fileRoutesById: FileRoutesById
 }
@@ -112,6 +124,7 @@ export interface RootRouteChildren {
   AuthRoute: typeof AuthRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
   DonationsSuccessRoute: typeof DonationsSuccessRoute
+  ReceiptsTokenRoute: typeof ReceiptsTokenRoute
   TicketsSuccessRoute: typeof TicketsSuccessRoute
 }
 
@@ -159,6 +172,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DonationsSuccessRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/receipts/$token': {
+      id: '/receipts/$token'
+      path: '/receipts/$token'
+      fullPath: '/receipts/$token'
+      preLoaderRoute: typeof ReceiptsTokenRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/tickets/success': {
       id: '/tickets/success'
       path: '/tickets/success'
@@ -186,6 +206,7 @@ const rootRouteChildren: RootRouteChildren = {
   AuthRoute: AuthRoute,
   ResetPasswordRoute: ResetPasswordRoute,
   DonationsSuccessRoute: DonationsSuccessRoute,
+  ReceiptsTokenRoute: ReceiptsTokenRoute,
   TicketsSuccessRoute: TicketsSuccessRoute,
 }
 export const routeTree = rootRouteImport
